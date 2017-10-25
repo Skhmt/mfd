@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="displays">
+    <output-path>$PROJECT_DIR$/out/artifacts/MFD_kt_jar/displays</output-path>
+    <root id="root">
+      <element id="dir-copy" path="$PROJECT_DIR$/displays" />
+    </root>
+  </artifact>
+</component>

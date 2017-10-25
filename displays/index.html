@@ -1,0 +1,63 @@
+<!--
+	Login and config page
+	This file is not meant to be modified by users
+-->
+
+<html>
+<head>
+	<title>MFD config page</title>
+	<script src="mfd.js"></script>
+	<script src="qrcode.min.js"></script>
+	<style>
+		.center {
+			/* --width: 500px; */
+			/* --height: 600px; */
+			position: relative;
+			display: block;
+			top: calc(50% - calc(600px / 2));
+			left: calc(50vw - calc(500px / 2));
+			background-color: rgba(0,0,0,0.5);
+			width: 500px;
+			height: 600px;
+			text-align: center;
+			color: white;
+		}
+	</style>
+</head>
+<body>
+	<div class="center">
+		test
+		<div id="ip"></div>
+		<div id="pass"></div>
+		<div id="qrcode"></div>
+	</div>
+	
+
+	 <script>
+		let parsedURL = new URL(window.location.href);
+		const ip = parsedURL.searchParams.get('ip');
+		const pass = parsedURL.searchParams.get('pass');
+
+		const $ip = document.getElementById('ip');
+		const $pass = document.getElementById('pass');
+		const $qr = document.getElementById('qrcode');
+
+		if (ip && pass) { // likely sent here by the taskbar
+			$ip.innerHTML = ip;
+			$pass.innerHTML = pass;
+			new QRCode($qr, `http://${ip}/?pass=${pass}`);
+		} else if (pass && !ip) { // likely sent here by the QR code
+			mfd.getCrypto(() => { // get the salt and # iterations from the server API
+				mfd.crypto.generateKey(pass); // generate the key based on the given password, salt, and iterations
+				mfd.test(isValidKey => { // test the newly generated key
+					if (isValidKey) {
+						localStorage.setItem('mfd-key', mfd.crypto.key); // store the key
+						localStorage.setItem('mfd-salt', mfd.crypto.salt); // store the salt
+						localStorage.setItem('mfd-its', mfd.crypto.iterations); // store the iterations
+					} else console.error('Bad key given');
+				});
+			});
+		}
+	</script>
+</body>
+</html>

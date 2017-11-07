@@ -29,7 +29,7 @@
 		test
 		<div id="ip"></div>
 		<div id="pass"></div>
-		<div id="qrcode"></div>
+		<div id="qrcode" style="text-align: center;"></div>
 	</div>
 	
 
@@ -43,8 +43,8 @@
 		const $qr = document.getElementById('qrcode');
 
 		if (ip && pass) { // likely sent here by the taskbar
-			$ip.innerHTML = ip;
-			$pass.innerHTML = pass;
+			$ip.innerHTML = "ip address: " + ip;
+			$pass.innerHTML = "passkey: " + pass;
 			new QRCode($qr, `http://${ip}/?pass=${pass}`);
 		} else if (pass && !ip) { // likely sent here by the QR code
 			mfd.getCrypto(() => { // get the salt and # iterations from the server API

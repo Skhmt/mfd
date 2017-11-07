@@ -18,6 +18,7 @@ import java.net.Inet4Address
 import java.net.URI
 import java.util.*
 import javax.imageio.ImageIO
+import org.json.JSONObject
 
 fun main(args: Array<String>) {
     val mfd = MFD()
@@ -59,13 +60,7 @@ class MFD {
         if (!displayFile.exists()) displayFile.mkdirs()
         http.staticFiles.externalLocation("displays")
 
-        http.get("/mfd/crypto") {
-            val salt = crypto.byteArrayToHex(crypto.salt)
-            val iterations = crypto.iterations
-            "{\"salt\":\"$salt\",\"iterations\":$iterations}"
-        }
-
-        // queryString: [32 char iv][n character cipherText]
+        // queryString: [32 char iv][n caracter cipherText]
         fun isValid(queryString: String?): Boolean {
             try {
                 if (queryString == null) return false
@@ -79,6 +74,21 @@ class MFD {
             catch (e: javax.crypto.AEADBadTagException) {
                 return false
             }
+        }
+
+        http.get("/mfd") {
+            """
+                {
+                    "crypto": "/mfd/crypto",
+                    "commands": "/mfd/cmd"
+                }
+            """.trimIndent()
+        }
+
+        http.get("/mfd/crypto") {
+            val salt = crypto.byteArrayToHex(crypto.salt)
+            val iterations = crypto.iterations
+            """{"salt":"$salt","iterations":$iterations}"""
         }
 
         http.get("/mfd/test") {
@@ -96,6 +106,44 @@ class MFD {
         //                              API                              //
         //                                                               //
         ///////////////////////////////////////////////////////////////////
+
+        //fetch("/mfd/cmd", {method: "POST", body: ""})
+        http.post("/mfd/cmd") {
+            val body = request.body().toString()
+            if (body == "") {
+                status(400)
+                return@post "<strong>Error 400</strong> - Bad request"
+            }
+
+            val bodyArray = body.split(":")
+            val jsonObj: JSONObject
+
+            try {
+                val iv = crypto.hexToByteArray(bodyArray[0])
+                val cipherText = crypto.hexToByteArray(bodyArray[1])
+                val plainText = crypto.decrypt(iv, cipherText)
+
+                jsonObj = JSONObject(plainText)
+            }
+            catch (e: javax.crypto.AEADBadTagException) {
+                status(401)
+                return@post "<strong>Error 401</strong> - Unauthorized"
+            }
+
+            val time = jsonObj.get("time") as Long
+            val action = jsonObj.get("action") as String
+            val data = jsonObj.get("data") as String
+
+            val currentTime = Date().time
+            if ( !(currentTime - time in -500..500) ) {
+                status(401)
+                return@post "<strong>Error 401</strong> - Unauthorized"
+            }
+
+            // handle action and data
+
+            status(204)
+        }
 
         // fetch("/mfd/keytap", {method: "POST", body: "a"})
         http.post("/mfd/keytap") {

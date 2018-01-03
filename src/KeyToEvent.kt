@@ -63,15 +63,16 @@ fun k2e(input: String): Int {
         "numseparator" -> return KeyEvent.VK_SEPARATOR
 
         // shift-numbers on US keyboard
-        "!" -> return KeyEvent.VK_EXCLAMATION_MARK
-        "@" -> return KeyEvent.VK_AT
-        "#" -> return KeyEvent.VK_NUMBER_SIGN
-        "$" -> return KeyEvent.VK_DOLLAR
-        "^" -> return KeyEvent.VK_CIRCUMFLEX
-        "&" -> return KeyEvent.VK_AMPERSAND
-        "(" -> return KeyEvent.VK_LEFT_PARENTHESIS
-        ")" -> return KeyEvent.VK_RIGHT_PARENTHESIS
-        "_" -> return KeyEvent.VK_UNDERSCORE
+        // these don't work with java.awt.Robot
+//        "!" -> return KeyEvent.VK_EXCLAMATION_MARK
+//        "@" -> return KeyEvent.VK_AT
+//        "#" -> return KeyEvent.VK_NUMBER_SIGN
+//        "$" -> return KeyEvent.VK_DOLLAR
+//        "^" -> return KeyEvent.VK_CIRCUMFLEX
+//        "&" -> return KeyEvent.VK_AMPERSAND
+//        "(" -> return KeyEvent.VK_LEFT_PARENTHESIS
+//        ")" -> return KeyEvent.VK_RIGHT_PARENTHESIS
+//        "_" -> return KeyEvent.VK_UNDERSCORE
 
         // "special" characters
         "[" -> return KeyEvent.VK_OPEN_BRACKET
@@ -137,6 +138,7 @@ fun k2e(input: String): Int {
         "shift" -> return KeyEvent.VK_SHIFT
         "ctrl" -> return KeyEvent.VK_CONTROL
         "alt" -> return KeyEvent.VK_ALT
+        "ralt" -> return KeyEvent.VK_ALT_GRAPH
 
     //        "" -> return KeyEvent.VK_
 

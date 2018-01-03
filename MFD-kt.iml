@@ -10,7 +10,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
     <orderEntry type="library" name="spark-kotlin-1.0.0-alpha-jar-with-dependencies" level="project" />
-    <orderEntry type="library" name="fluid-json-0.9.0-sources" level="project" />
     <orderEntry type="library" name="json-20170516" level="project" />
   </component>
 </module>

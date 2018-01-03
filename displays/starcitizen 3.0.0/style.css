@@ -1,0 +1,166 @@
+body { 
+    margin: 0;
+    text-align: center;
+    background-color: black;
+    user-select: none;
+    height: 100%;
+}
+
+#start {
+    position: relative;
+    top: 50%;
+}
+#start button {
+    background: rgba(0,0,0,0);
+    font-family: "Inconsolata", "Consolas", "Menlo", monospace;
+    color: #ffffff;
+    font-size: 20px;
+    text-decoration: none;
+    padding: 10px;
+    border: solid #DDD 4px;
+}
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Chrome and Opera */
+    cursor: default;
+    -webkit-user-drag: none;
+}
+
+/* Grid layout */
+
+#mfd {
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    padding: 10px;
+    display: none;
+    background-color: black;
+}
+
+#tabs {
+    height: calc(20% - 20px);
+    display: grid;
+    padding: 10px;
+    grid-gap: 10px 10px;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+#displays {
+    height: calc(80% - 20px);
+}
+
+#displays div {
+    height: 100%;
+    padding: 10px;
+    grid-gap: 10px 10px;
+    grid-template-columns: repeat(6, 1fr);
+}
+
+#displays div div, #tabs div {
+    text-align: center;
+    min-width: 0;
+    min-height: 0;
+    height: calc(100% - 20px);
+	border-radius: 5px;
+	transition: opacity 0.25s;
+    opacity: 0;
+}
+
+#displays div div span, #tabs div span {
+    display: block;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#main {
+    grid-column: 2/6;
+    grid-row: 2/5;
+}
+
+.activeTab {
+    border: 1px solid #F44336;
+    background-color: #F44336;
+    color: white;
+}
+
+.inactiveTab {
+    border: 1px solid #F44336;
+    color: #F44336;
+}
+
+.sunflower {
+    border: 1px solid #f1c40f;
+    color: #f1c40f;
+}
+.sunflower:active {
+    background-color: #f1c40f;
+    color: black;
+}
+
+.peterriver {
+    border: 1px solid #3498db;
+    color: #3498db;
+}
+.peterriver:active {
+    background-color: #3498db;
+    color: black;
+}
+
+.emerald {
+    border: 1px solid #2ecc71;
+    color: #2ecc71;
+}
+.emerald:active {
+    background-color: #2ecc71;
+    color: black;
+}
+
+.alizarin {
+    border: 1px solid #e74c3c;
+    color: #e74c3c;
+}
+.alizarin:active {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.concrete {
+    border: 1px solid #95a5a6;
+    color: #95a5a6;
+}
+.concrete:active {
+    background-color: #95a5a6;
+    color: black;
+}
+
+.clouds {
+    border: 1px solid #ecf0f1;
+    color: #ecf0f1;
+}
+.clouds:active {
+    background-color: #ecf0f1;
+    color: black;
+}
+
+.carrot {
+    border: 1px solid #e67e22;
+    color: #e67e22;
+}
+.carrot:active {
+    background-color: #e67e22;
+    color: black;
+}
+
+.turquoise {
+    border: 1px solid #1abc9c;
+    color: #1abc9c;
+}
+.turquoise:active {
+    background-color: #1abc9c;
+    color: black;
+}

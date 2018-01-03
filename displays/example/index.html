@@ -1,93 +1,155 @@
-<html>
+<html lang="en">
     <head>
         <title>MFD</title>
-        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" type="text/css" href="/example/style.css">
+        <meta charset="utf-8"/>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <script defer src="https://use.fontawesome.com/releases/v5.0.2/js/all.js"></script>
+        <script src="../asmCrypto.min.js"></script>
         <script src="../mfd.js"></script>
     </head>
     <body>
         <div id="start">
             <input type="text" id="keyfield">
-            <button id="enter"> Enter </button>
+            <button class="noselect" id="enter" onclick="submit();"> Enter </button>
         </div>
 
         <div id="mfd" class="noselect">
 
 <!-- Modifying anything ABOVE this line isn't recommended unless you have HTML/CSS/JS experience -->
+			
+			<!-- Top 6 buttons -->
+            <div style="background-color: #6441A4; color: #ecf0f1;" onclick="vib();mfd.url('www.twitch.tv');">
+                <span>
+                    <i class="fab fa-twitch fa-lg"></i><br>
+                    Twitch
+                </span>
+            </div>
+            <div style="background-color: #00aced; color: #ecf0f1;" onclick="vib();mfd.url('www.twitter.com');">
+                <span>
+                    <i class="fab fa-twitter fa-lg"></i><br>
+                    Twitter
+                </span>
+            </div>
+            <div style="background-color: #3b5998; color: #ecf0f1;" onclick="vib();mfd.url('www.facebook.com');">
+                <span>
+                    <i class="fab fa-facebook fa-lg"></i><br>
+                    facebook
+                </span>
+            </div>
+            <div style="background-color: #35465c; color: #ecf0f1;" onclick="vib();mfd.url('www.tumblr.com');">
+                <span>
+                    <i class="fab fa-tumblr fa-lg"></i><br>
+                    Tumblr
+                </span>
+            </div>
+            <div style="background-color: #ff5700; color: #ecf0f1;" onclick="vib();mfd.url('www.reddit.com');">
+                <span>
+                    <i class="fab fa-reddit-alien fa-lg"></i><br>
+                    reddit
+                </span>
+            </div>
+            <div style="background: linear-gradient(#400080, transparent), linear-gradient( 200deg,#d047d1,#ff0000,#ffff00); color: #ecf0f1;"  onclick="vib();mfd.url('www.instagram.com');">
+                <span>
+                    <i class="fab fa-instagram fa-lg"></i><br>
+                    instagram
+                </span>
+            </div>
+			
+			<!-- Buttons that flank the main screen -->
+            <div style="background-color: #bdc3c7;" onclick="vib();mfd.exec('calc');">
+                <span>
+                    <i class="fas fa-calculator fa-lg"></i><br>
+                    Calculator (win)
+                </span>
+            </div>
+            <div style="background-color: #bdc3c7;" onclick="vib();mfd.getScreenshot(0,0,2560,1440, url => document.getElementById('mainframe').src = url)">
+                <span>
+                    <i class="fas fa-desktop fa-lg"></i><br>
+                    Main Screen: Desktop image
+                </span>
+            </div>
 
-            <div id="r1c1" style="background-color: #6441A4; color: #ecf0f1;" onclick="vib();mfd.url('www.twitch.tv');">
-                <span><i class="fa fa-twitch fa-lg"></i></span>
-                <span>Twitch</span>
+            <div style="background-color: #bdc3c7;" onclick="vib();mfd.exec('notepad');">
+                <span>
+                    <i class="fas fa-edit fa-lg"></i><br>
+                    Notepad (win)
+                </span>
             </div>
-            <div id="r1c2" style="background-color: #00aced; color: #ecf0f1;" onclick="vib();mfd.url('www.twitter.com');">
-                <span><i class="fa fa-twitter fa-lg"></i></span>
-                <span>Twitter</span>
-            </div>
-            <div id="r1c3" style="background-color: #3b5998; color: #ecf0f1;" onclick="vib();mfd.url('www.facebook.com');">
-                <span><i class="fa fa-facebook fa-lg"></i></span>
-                <span>facebook</span>
-            </div>
-            <div id="r1c4" style="background-color: #35465c; color: #ecf0f1;" onclick="vib();mfd.url('www.tumblr.com');">
-                <span><i class="fa fa-tumblr fa-lg"></i></span>
-                <span>Tumblr</span>
-            </div>
-            <div id="r1c5" style="background-color: #ff5700; color: #ecf0f1;" onclick="vib();mfd.url('www.reddit.com');">
-                <span><i class="fa fa-reddit-alien fa-lg"></i></span>
-                <span>reddit</span>
-            </div>
-            <div id="r1c6" style="background: linear-gradient(#400080, transparent), linear-gradient( 200deg,#d047d1,#ff0000,#ffff00); color: #ecf0f1;"  onclick="vib(mfd.url('www.instagram.com'))">
-                <span><i class="fa fa-instagram fa-lg"></i></span>
-                <span>instagram</span>
+            <div style="background-color: #bdc3c7;" onclick="vib();document.getElementById('mainframe').src = 'https://www.youtube.com/embed/ZzQ3eBerHfM';">
+                <span>
+                    <i class="fas fa-fighter-jet fa-lg"></i><br>
+                    Main Screen: Danger Zone
+                </span>
             </div>
 
-            <div id="r2c1" style="background-color: #34495e;" >
-                <span>a</span>
+            <div style="background-color: #bdc3c7;" onclick="vib();mfd.exec('mspaint');">
+                <span>
+                    <i class="fas fa-paint-brush fa-lg"></i><br>
+                    MSPaint (win)
+                </span>
             </div>
-            <div id="r2c6" style="background-color: #2c3e50;" >
-                <span>a</span>
+            <div style="background-color: #bdc3c7;" onclick="vib();mfd.ping(ping => alert(`Ping: ${ping}ms`))">
+                <span>
+                    <i class="fas fa-cloud fa-lg"></i><br>
+                    Ping
+                </span>
             </div>
-
-            <div id="r3c1" style="background-color: #95a5a6;" >
-                <span>a</span>
+			
+			<!-- Bottom 6 buttons -->
+            <div style="background-color: #bdc3c7;" onclick="vib();mfd.typeString('Hello World!!');">
+                <span>
+                    <i class="fas fa-keyboard fa-lg"></i><br>
+                    Type "Hello World"
+                </span>
             </div>
-            <div id="r3c6" style="background-color: #7f8c8d;" >
-                <span>a</span>
+			<div style="background-color: #bdc3c7;" onclick="vib();mfd.keyTap('f4', ['alt']);">
+                <span>
+                    <i class="far fa-window-close fa-lg"></i><br>
+                    Press [Alt] + [F4]
+                </span>
             </div>
-
-            <div id="r4c1" style="background-color: #ecf0f1;" >
-                <span>a</span>
+			<div style="background-color: #bdc3c7;" onclick="vib();mfd.mouseMove(0,0);">
+                <span>
+                    <i class="fas fa-mouse-pointer fa-lg"></i><br>
+                    Move mouse to top left
+                </span>
             </div>
-            <div id="r4c6" style="background-color: #bdc3c7;" >
-                <span>a</span>
+			<div style="background-color: #bdc3c7;" onclick="vib();mfd.mouseClick('right');">
+                <span>
+                    <i class="fas fa-mouse-pointer fa-lg"></i><br>
+                    Mouse right click
+                </span>
             </div>
-
-            <div id="main" style="background-color: #e74c3c;" >
-                <span>a</span>
+			<div style="background-color: #bdc3c7;" onclick="vib();
+			mfd.getMouse(ptr => {
+				mfd.getPixel(ptr.x, ptr.y, pxl => {
+					alert(`r: ${pxl.red}, g: ${pxl.green}, b: ${pxl.blue}`);
+				});
+			});">
+                <span>
+                    <i class="fas fa-mouse-pointer fa-lg"></i><br>
+                    Get pixel color
+                </span>
             </div>
-
-            <div id="r5c1" style="background-color: #16a085;" >
-                <span>a</span>
+			<div style="background-color: #bdc3c7;" onclick="vib();mfd.getMouse(res => alert(`x: ${res.x}, y: ${res.y}`));">
+                <span>
+                    <i class="fas fa-mouse-pointer fa-lg"></i><br>
+                    Get mouse coords
+                </span>
             </div>
-            <div id="r5c2" style="background-color: #27ae60;" >
-                <span>a</span>
-            </div>
-            <div id="r5c3" style="background-color: #2980b9;" >
-                <span>a</span>
-            </div>
-            <div id="r5c4" style="background-color: #8e44ad;" >
-                <span>a</span>
-            </div>
-            <div id="r5c5" style="background-color: #f39c12;" >
-                <span>a</span>
-            </div>
-            <div id="r5c6" style="background-color: #d35400;" >
-                <span>a</span>
+			
+			<!-- Main screen -->
+			<div id="main" style="background-color: #e74c3c;">
+                <iframe src="https://www.youtube.com/embed/ZzQ3eBerHfM"
+                    id="mainframe"
+                    style="height: 100%; width: 100%; border: 0">
+                </iframe>
             </div>
 
 <!-- Modifying anything BELOW this line isn't recommended unless you have HTML/CSS/JS experience -->
 
         </div>
 
-        <script src="/example/script.js"></script>
+        <script src="script.js"></script>
     </body>
 </html>

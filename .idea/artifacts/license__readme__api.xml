@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="license, readme, api">
+    <output-path>$PROJECT_DIR$/out/artifacts/MFD_kt_jar/</output-path>
+    <root id="root">
+      <element id="file-copy" path="$PROJECT_DIR$/license.txt" />
+      <element id="file-copy" path="$PROJECT_DIR$/readme.md" />
+    </root>
+  </artifact>
+</component>

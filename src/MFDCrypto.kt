@@ -86,17 +86,12 @@ class MFDCrypto() {
 
     @Throws(javax.crypto.AEADBadTagException::class)
     fun decrypt(iv: ByteArray, cipherText: ByteArray): String {
-        try {
-            val cipher = Cipher.getInstance("AES/GCM/NoPadding")
-            val sKey = SecretKeySpec(key, "AES")
-            val gcmSpec = GCMParameterSpec(128, iv)
-            cipher.init(Cipher.DECRYPT_MODE, sKey, gcmSpec)
-            cipher.updateAAD(adata)
-            return String(cipher.doFinal(cipherText))
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return ""
+        val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+        val sKey = SecretKeySpec(key, "AES")
+        val gcmSpec = GCMParameterSpec(128, iv)
+        cipher.init(Cipher.DECRYPT_MODE, sKey, gcmSpec)
+        cipher.updateAAD(adata)
+        return String(cipher.doFinal(cipherText))
     }
 
     // sets the salt property and also returns the value that it set it to

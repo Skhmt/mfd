@@ -7,6 +7,7 @@
  *
  */
 
+import org.json.JSONArray
 import spark.kotlin.*
 
 import java.awt.*
@@ -19,36 +20,46 @@ import java.net.URI
 import java.util.*
 import javax.imageio.ImageIO
 import org.json.JSONObject
+import java.io.FileFilter
 
 fun main(args: Array<String>) {
-    val mfd = MFD()
+    val version = "0.3.0"
+    val mfd = MFD(version, 80)
     mfd.tray()
     mfd.spark()
 }
 
-class MFD {
+class MFD(ver: String, prt: Int) {
+    private val robot: Robot = Robot()
+    private val crypto: MFDCrypto = MFDCrypto()
 
-    val robot: Robot
-    val crypto: MFDCrypto
+    private val version: String = ver
+    private var port = prt
 
-    var port: Int
-    var delay: Int // in milliseconds
+    private var users = mutableMapOf<String, Long>()
 
-    val plainTextPassword: String
+    private var plainPassword = ""
 
     init {
-        port = 80
-        delay = 17
-
-        robot = Robot()
         robot.isAutoWaitForIdle = true
 
-        crypto = MFDCrypto()
+        setCrypto(crypto.randomPassword(9))
+    }
+
+    private fun setCrypto(password: String) {
         crypto.salt = crypto.generateSalt()
         crypto.iterations = 10000 // default value is 10000
-        plainTextPassword = crypto.randomPassword(9)
-        crypto.key = crypto.generateKey(plainTextPassword)
-//        crypto.key = crypto.generateKey("password") // for testing
+        crypto.key = crypto.generateKey(password)
+        plainPassword = password
+    }
+
+    private fun getCrypto(): String {
+        val salt = crypto.byteArrayToHex(crypto.salt)
+        val iterations = crypto.iterations
+        val json = JSONObject()
+        json.put("salt", salt)
+        json.put("iterations", iterations)
+        return json.toString()
     }
 
     fun spark() {
@@ -60,45 +71,30 @@ class MFD {
         if (!displayFile.exists()) displayFile.mkdirs()
         http.staticFiles.externalLocation("displays")
 
-        // queryString: [32 char iv][n caracter cipherText]
-        fun isValid(queryString: String?): Boolean {
-            try {
-                if (queryString == null) return false
-                val queryArray = queryString.split(":")
-                val iv = crypto.hexToByteArray(queryArray[0])
-                val cipherText = crypto.hexToByteArray(queryArray[1])
-                val plainText = crypto.decrypt(iv, cipherText).toLong()
-                val currentTime = Date().time
-                return (currentTime - plainText in -500..500)
-            }
-            catch (e: javax.crypto.AEADBadTagException) {
-                return false
-            }
-        }
-
         http.get("/mfd") {
-            """
-                {
-                    "crypto": "/mfd/crypto",
-                    "commands": "/mfd/cmd"
-                }
-            """.trimIndent()
+            val json = JSONObject()
+            json.put("version", version)
+            json.put("crypto", "/mfd/crypto")
+            json.put("displays", "/mfd/displays")
+            json.put("api", "/mfd/api")
+            json.toString()
         }
 
         http.get("/mfd/crypto") {
-            val salt = crypto.byteArrayToHex(crypto.salt)
-            val iterations = crypto.iterations
-            """{"salt":"$salt","iterations":$iterations}"""
+            getCrypto()
         }
 
-        http.get("/mfd/test") {
-            if (isValid(request.queryParams("token"))) {
-                status(204)
-            }
-            else {
-                status(401)
-                "<strong>Error 401</strong> - Unauthorized"
-            }
+        http.get("/mfd/displays") {
+            val directoryFiles = displayFile.listFiles(FileFilter { it.isDirectory })
+            val directoryNames = directoryFiles.map{ it.name }
+            val json = JSONObject()
+            val jsonArr = JSONArray(directoryNames)
+            json.put("displays", jsonArr)
+            json.toString()
+        }
+
+        http.get("/mfd/api") {
+            "See documentation. The API uses HTTP POST requests."
         }
 
         ///////////////////////////////////////////////////////////////////
@@ -107,19 +103,19 @@ class MFD {
         //                                                               //
         ///////////////////////////////////////////////////////////////////
 
-        //fetch("/mfd/cmd", {method: "POST", body: ""})
-        http.post("/mfd/cmd") {
-            val body = request.body().toString()
-            if (body == "") {
+        //fetch("/mfd/app", {method: "POST", body: "..."})
+        http.post("/mfd/api") {
+            if (request.body().isEmpty()) {
                 status(400)
                 return@post "<strong>Error 400</strong> - Bad request"
             }
 
+            val body = request.body().toString()
             val bodyArray = body.split(":")
             val jsonObj: JSONObject
-
+            val ivHex = bodyArray[0]
             try {
-                val iv = crypto.hexToByteArray(bodyArray[0])
+                val iv = crypto.hexToByteArray(ivHex)
                 val cipherText = crypto.hexToByteArray(bodyArray[1])
                 val plainText = crypto.decrypt(iv, cipherText)
 
@@ -130,301 +126,180 @@ class MFD {
                 return@post "<strong>Error 401</strong> - Unauthorized"
             }
 
-            val time = jsonObj.get("time") as Long
-            val action = jsonObj.get("action") as String
-            val data = jsonObj.get("data") as String
+            val user: String = ivHex.substring(0,8)
+            val time: Long = java.lang.Long.parseLong(ivHex.substring(8), 16)
 
-            val currentTime = Date().time
-            if ( !(currentTime - time in -500..500) ) {
+            if ( users.containsKey(user) && time < users[user] as Long ) {
+                println("replayed")
                 status(401)
                 return@post "<strong>Error 401</strong> - Unauthorized"
             }
+            else { // new user or "time" is more recent than the latest time for that user
+                users[user] = time
+            }
+
+            val action = jsonObj.get("action") as String
+            val data = jsonObj.get("data") as String
 
             // handle action and data
-
-            status(204)
-        }
-
-        // fetch("/mfd/keytap", {method: "POST", body: "a"})
-        http.post("/mfd/keytap") {
-            if (!isValid(request.queryParams("token"))) {
-                status(401)
-                "<strong>Error 401</strong> - Unauthorized"
-            }
-            else {
-                val key = k2e(request.body().toString())
-                try {
-                    robot.delay(delay)
-                    robot.keyPress(key)
-                    robot.delay(delay)
-                    robot.keyRelease(key)
-                    status(204)
-                } catch (e: IllegalArgumentException) {
-                    status(400)
-                    "<strong>Error 400</strong> - Bad request"
-                }
-            }
-        }
-
-        // fetch("/mfd/keyon", {method: "POST", body: "shift"})
-        http.post("/mfd/keyon") {
-            if (!isValid(request.queryParams("token"))) {
-                status(401)
-                "<strong>Error 401</strong> - Unauthorized"
-            }
-            else {
-                val key: Int = k2e(request.body().toString())
-                try {
-                    robot.keyPress(key)
-                    status(204)
-                } catch (e: IllegalArgumentException) {
-                    status(400)
-                    "<strong>Error 400</strong> - Bad request"
-                }
-            }
-        }
-
-        // fetch("/mfd/keyoff", {method: "POST", body: "shift"})
-        http.post("/mfd/keyoff") {
-            if (!isValid(request.queryParams("token"))) {
-                status(401)
-                "<strong>Error 401</strong> - Unauthorized"
-            }
-            else {
-                val key: Int = k2e(request.body().toString())
-                try {
-                    robot.keyRelease(key)
-                    status(204)
-                } catch (e: IllegalArgumentException) {
-                    status(400)
-                    "<strong>Error 400</strong> - Bad request"
-                }
-            }
-        }
-
-        // fetch("/mfd/typestring", {method: "POST", body: "hello world"})
-        http.post("/mfd/typestring") {
-            if (!isValid(request.queryParams("token"))) {
-                status(401)
-                "<strong>Error 401</strong> - Unauthorized"
-            }
-            else {
-                val keyArray = request.body().toCharArray()
-                try {
-                    for (c in keyArray) {
-                        val key = k2e(c.toString())
-                        robot.delay(delay)
+            try {
+                when (action) {
+                    "keyon" -> {
+                        val key: Int = k2e(data)
                         robot.keyPress(key)
-                        robot.delay(delay)
-                        robot.keyRelease(key)
+                        status(204)
                     }
-                    status(204)
-                } catch (e: IllegalArgumentException) {
-                    status(400)
-                    "<strong>Error 400</strong> - Bad request"
-                }
-            }
-        }
+                    "keyoff" -> {
+                        val key: Int = k2e(data)
+                        robot.keyRelease(key)
+                        status(204)
+                    }
+                    "typestring" -> {
+                        val keyArray = data.toCharArray()
+                        for (c in keyArray) {
+                            if ("!@#$%^&*()_+{}|:\"<>?~".contains(c)) {
+                                robot.keyPress(k2e("shift"))
+                                val key: Int;
+                                when (c) {
+                                    '!' -> key = k2e("1")
+                                    '@' -> key = k2e("2")
+                                    '#' -> key = k2e("3")
+                                    '$' -> key = k2e("4")
+                                    '%' -> key = k2e("5")
+                                    '^' -> key = k2e("6")
+                                    '&' -> key = k2e("7")
+                                    '*' -> key = k2e("8")
+                                    '(' -> key = k2e("9")
+                                    ')' -> key = k2e("0")
+                                    '_' -> key = k2e("-")
+                                    '+' -> key = k2e("=")
+                                    '{' -> key = k2e("[")
+                                    '}' -> key = k2e("]")
+                                    '|' -> key = k2e("\\")
+                                    ':' -> key = k2e(";")
+                                    '"' -> key = k2e("'")
+                                    '<' -> key = k2e(",")
+                                    '>' -> key = k2e(".")
+                                    '?' -> key = k2e("/")
+                                    '~' -> key = k2e("`")
+                                    else -> key = k2e(" ")
+                                }
+                                robot.keyPress(key)
+                                robot.keyRelease(key)
+                                robot.keyRelease(k2e("shift"))
+                            }
+                            else {
+                                if (c.isUpperCase()) robot.keyPress(k2e("shift"))
+                                val key = k2e(c.toLowerCase().toString())
+                                robot.keyPress(key)
+                                robot.keyRelease(key)
+                                if (c.isUpperCase()) robot.keyRelease(k2e("shift"))
+                            }
+                        }
+                        status(204)
+                    }
+                    "exec" -> {
+                        Runtime.getRuntime().exec(data)
+                        status(204)
+                    }
+                    "url" -> {
+                        if (Desktop.isDesktopSupported()) {
+                            Desktop.getDesktop().browse(URI(data))
+                            status(204)
+                        }
+                        else {
+                            println("Error: 'Desktop' isn't supported in your version of Java - can't open \"$data\"")
+                            status(500)
+                            "<strong>Error 500</strong> - Internal Server Error"
+                        }
+                    }
+                    "mousemove" -> {
+                        val pointList = data.split(',')
+                        val x = pointList[0].toInt()
+                        val y = pointList[1].toInt()
+                        robot.mouseMove(x, y)
+                        status(204)
+                    }
+                    "mouseon" -> {
+                        val button: Int
+                        when (data) {
+                            "center" -> button = InputEvent.BUTTON2_DOWN_MASK
+                            "right" -> button = InputEvent.BUTTON3_DOWN_MASK
+                            else -> button = InputEvent.BUTTON1_DOWN_MASK
+                        }
+                        robot.mousePress(button)
+                        status(204)
+                    }
+                    "mouseoff" -> {
+                        val button: Int
+                        when (data) {
+                            "center" -> button = InputEvent.BUTTON2_DOWN_MASK
+                            "right" -> button = InputEvent.BUTTON3_DOWN_MASK
+                            else -> button = InputEvent.BUTTON1_DOWN_MASK
+                        }
 
-        // fetch("/mfd/delay", {method: "POST", body: "5"})
-        http.post("/mfd/delay/:delay") {
-            if (!isValid(request.queryParams("token"))) {
-                status(401)
-                "<strong>Error 401</strong> - Unauthorized"
-            }
-            else {
-                delay = request.params("delay").toInt()
-                status(204)
-            }
-        }
+                        robot.mouseRelease(button)
+                        status(204)
 
-        http.get("/mfd/delay/") {
-            if (!isValid(request.queryParams("token"))) {
-                status(401)
-                "<strong>Error 401</strong> - Unauthorized"
-            }
-            else {
-                "{ \"delay\": $delay }"
-            }
-        }
+                    }
+                    "mousewheel" -> {
+                        val amt = data.toInt()
+                        robot.mouseWheel(amt)
+                        status(204)
+                    }
+                    "capture" -> {
+                        val dataList = data.split(',')
+                        val x = dataList[0].toInt()
+                        val y = dataList[1].toInt()
+                        val width = dataList[2].toInt()
+                        val height = dataList[3].toInt()
 
-        // fetch("/mfd/exec", {method: "POST", body: "notepad.exe"})
-        http.post("/mfd/exec") {
-            if (!isValid(request.queryParams("token"))) {
-                status(401)
-                "<strong>Error 401</strong> - Unauthorized"
-            }
-            else {
-                try {
-                    Runtime.getRuntime().exec( request.body().toString() )
-                    status(204)
-                } catch (e: Exception) {
-                    status(400)
-                    "<strong>Error 400</strong> - Bad request"
-                }
-            }
-        }
-
-        http.post("/mfd/url") {
-            if (!isValid(request.queryParams("token"))) {
-                status(401)
-                "<strong>Error 401</strong> - Unauthorized"
-            }
-            else {
-                try {
-                    val uri = request.body().toString()
-                    if (Desktop.isDesktopSupported()) Desktop.getDesktop().browse(URI(uri))
-                    else println("Error: Desktop isn't supported - can't open \"$uri\"")
-                } catch (e: Exception) {
-                    status(400)
-                    "<strong>Error 400</strong> - Bad request"
-                }
-            }
-        }
-
-        // fetch("/mfd/pixel/50/100")
-        http.get("/mfd/pixel/:x/:y") {
-            if (!isValid(request.queryParams("token"))) {
-                status(401)
-                "<strong>Error 401</strong> - Unauthorized"
-            }
-            else {
-                try {
-                    val color = robot.getPixelColor(request.params("x").toInt(), request.params("y").toInt())
-                    "{ \"red\": ${color.red}, \"green\": ${color.green}, \"blue\": ${color.blue} }"
-                } catch (e: IllegalArgumentException) {
-                    status(400)
-                    "<strong>Error 400</strong> - Bad request"
-                }
-            }
-        }
-
-        // fetch("/mfd/move/50/100", {method: "POST"})
-        http.post("/mfd/move/:x/:y") {
-            if (!isValid(request.queryParams("token"))) {
-                status(401)
-                "<strong>Error 401</strong> - Unauthorized"
-            }
-            else {
-                try {
-                    robot.mouseMove(request.params("x").toInt(), request.params("y").toInt())
-                    status(204)
-                } catch (e: IllegalArgumentException) {
-                    status(400)
-                    "<strong>Error 400</strong> - Bad request"
-                }
-            }
-        }
-
-        http.post("/mfd/click/:button") {
-            if (!isValid(request.queryParams("token"))) {
-                status(401)
-                "<strong>Error 401</strong> - Unauthorized"
-            }
-            else {
-                val button: Int
-                when (request.params("button")) {
-                    "center" -> button = InputEvent.BUTTON2_DOWN_MASK
-                    "right" -> button = InputEvent.BUTTON3_DOWN_MASK
-                    else -> button = InputEvent.BUTTON1_DOWN_MASK
-                }
-                try {
-                    robot.delay(delay)
-                    robot.mousePress(button)
-                    robot.delay(delay)
-                    robot.mouseRelease(button)
-                    status(204)
-                } catch (e: IllegalArgumentException) {
-                    status(400)
-                    "<strong>Error 400</strong> - Bad request"
-                }
-            }
-        }
-
-        http.post("/mfd/mouseon/:button") {
-            if (!isValid(request.queryParams("token"))) {
-                status(401)
-                "<strong>Error 401</strong> - Unauthorized"
-            }
-            else {
-                val button: Int
-                when (request.params("button")) {
-                    "center" -> button = InputEvent.BUTTON2_DOWN_MASK
-                    "right" -> button = InputEvent.BUTTON3_DOWN_MASK
-                    else -> button = InputEvent.BUTTON1_DOWN_MASK
-                }
-                try {
-                    robot.mousePress(button)
-                    status(204)
-                } catch (e: IllegalArgumentException) {
-                    status(400)
-                    "<strong>Error 400</strong> - Bad request"
-                }
-            }
-        }
-
-        http.post("/mfd/mouseoff/:button") {
-            if (!isValid(request.queryParams("token"))) {
-                status(401)
-                "<strong>Error 401</strong> - Unauthorized"
-            }
-            else {
-                val button: Int
-                when (request.params("button")) {
-                    "center" -> button = InputEvent.BUTTON2_DOWN_MASK
-                    "right" -> button = InputEvent.BUTTON3_DOWN_MASK
-                    else -> button = InputEvent.BUTTON1_DOWN_MASK
-                }
-                try {
-                    robot.mouseRelease(button)
-                    status(204)
-                } catch (e: IllegalArgumentException) {
-                    status(400)
-                    "<strong>Error 400</strong> - Bad request"
-                }
-            }
-        }
-
-        // fetch("/mfd/wheel", {method: "POST", body: "100"}) negative is up/away from user, positive is down/toward user
-        http.post("/mfd/wheel/:clicks") {
-            if (!isValid(request.queryParams("token"))) {
-                status(401)
-                "<strong>Error 401</strong> - Unauthorized"
-            }
-            else {
-                val amt = request.params("clicks").toInt()
-                try {
-                    robot.mouseWheel(amt)
-                    status(204)
-                } catch (e: IllegalArgumentException) {
-                    status(400)
-                    "<strong>Error 400</strong> - Bad request"
-                }
-            }
-        }
-
-        http.get("/mfd/capture/:x/:y/:width/:height") {
-            if (!isValid(request.queryParams("token"))) {
-                status(401)
-                "<strong>Error 401</strong> - Unauthorized"
-            }
-            else {
-                val x = request.params("x").toInt()
-                val y = request.params("y").toInt()
-                val width = request.params("width").toInt()
-                val height = request.params("height").toInt()
-                try {
-                    val rect = Rectangle(x, y, width, height)
-                    val bufferedImage = robot.createScreenCapture(rect)
-                    val byteArrayOutputStream = ByteArrayOutputStream()
-                    ImageIO.write(bufferedImage, "png", byteArrayOutputStream)
-                    byteArrayOutputStream.flush()
-                    response.type("image/png")
-                    byteArrayOutputStream.toByteArray()
-                } catch (e: IllegalArgumentException) {
-                    status(400)
-                    "<strong>Error 400</strong> - Bad request"
-                }
+                        val rect = Rectangle(x, y, width, height)
+                        val bufferedImage = robot.createScreenCapture(rect)
+                        val byteArrayOutputStream = ByteArrayOutputStream()
+                        ImageIO.write(bufferedImage, "png", byteArrayOutputStream)
+                        byteArrayOutputStream.flush()
+                        response.type("image/png")
+                        byteArrayOutputStream.toByteArray()
+                    }
+                    "pixel" -> {
+                        val pointList = data.split(',')
+                        val x = pointList[0].toInt()
+                        val y = pointList[1].toInt()
+                        val color = robot.getPixelColor(x, y)
+                        "{ \"red\": ${color.red}, \"green\": ${color.green}, \"blue\": ${color.blue} }"
+                    }
+                    "mousepointer" -> {
+                        val p = MouseInfo.getPointerInfo().location
+                        val json = JSONObject()
+                        json.put("x", p.x)
+                        json.put("y", p.y)
+                        json.toString()
+                    }
+                    "test" -> {
+                        val json = JSONObject()
+                        json.put("test", "OK")
+                        json.toString()
+                    }
+                    "changepass" -> {
+                        println("Password changed to $data")
+                        setCrypto(data)
+                        return@post getCrypto()
+                    }
+                    "version" -> {
+                        val json = JSONObject()
+                        json.put("version", version)
+                        json.toString()
+                    }
+                    else -> {
+                        status(404)
+                        "<strong>Error 404</strong> - Endpoint not found"
+                    }
+                } // close when
+            } catch (e: IllegalArgumentException) {
+                println(e.printStackTrace())
+                status(400)
+                "<strong>Error 400</strong> - Bad request"
             }
         }
     }
@@ -447,17 +322,17 @@ class MFD {
 
         // Creating the vals we need
         val popup = PopupMenu()
-        val trayIcon = TrayIcon(icon, "MFD")
+        val trayIcon = TrayIcon(icon, "MFD $version")
         val tray = SystemTray.getSystemTray()
 
         // Create pop-up menu components
         val configItem = MenuItem("Config")
-        val aboutItem = MenuItem("Help")
+        val redditItem = MenuItem("/r/mfd")
         val exitItem = MenuItem("Exit")
 
         // Add components to pop-up menu
         popup.add(configItem)
-        popup.add(aboutItem)
+        popup.add(redditItem)
         popup.addSeparator()
         popup.add(exitItem)
 
@@ -470,9 +345,9 @@ class MFD {
         }
 
         // Listeners
-        aboutItem.addActionListener {
+        redditItem.addActionListener {
             if (Desktop.isDesktopSupported()) {
-                val uri = "https://github.com"
+                val uri = "https://reddit.com/r/mfd"
                 Desktop.getDesktop().browse(URI(uri))
             }
         }
@@ -485,18 +360,15 @@ class MFD {
                 val oct4: Int = if (ip[3].toInt() < 0) ip[3].toInt() + 256 else ip[3].toInt()
                 var urlQuery = "$oct1.$oct2.$oct3.$oct4"
                 if (port != 80) urlQuery += ":$port"
-                val uri = "http://localhost:$port/?ip=$urlQuery&pass=$plainTextPassword"
+                val uri = "http://localhost:$port/?ip=$urlQuery#$plainPassword"
                 Desktop.getDesktop().browse(URI(uri))
             }
         }
-//        trayIcon.displayMessage("caption", "error", TrayIcon.MessageType.ERROR)
-//        trayIcon.displayMessage("caption", "warn", TrayIcon.MessageType.WARNING)
-//        trayIcon.displayMessage("caption", "info", TrayIcon.MessageType.INFO)
-//        trayIcon.displayMessage("caption", "none", TrayIcon.MessageType.NONE)
         exitItem.addActionListener {
             tray.remove(trayIcon)
             System.exit(0)
         }
 
+//        trayIcon.displayMessage("Multi-Function Display", version, TrayIcon.MessageType.NONE)
     }
 }

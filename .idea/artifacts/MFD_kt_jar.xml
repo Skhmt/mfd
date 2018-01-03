@@ -10,6 +10,7 @@
       <element id="extracted-dir" path="$KOTLIN_BUNDLED$/lib/kotlin-stdlib-jre7.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$KOTLIN_BUNDLED$/lib/kotlin-stdlib-jre8.jar" path-in-jar="/" />
       <element id="dir-copy" path="$PROJECT_DIR$/resources" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/json-20170516.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

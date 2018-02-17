@@ -1,0 +1,125 @@
+<html lang="en">
+    <head>
+        <title>MFD</title>
+        <meta charset="utf-8"/>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <script defer src="https://use.fontawesome.com/releases/v5.0.2/js/all.js"></script>
+        <script src="../asmCrypto.min.js"></script>
+        <script src="../mfd.js"></script>
+    </head>
+    <body>
+        <div id="start">
+            <input type="text" id="keyfield">
+            <button class="noselect" id="enter" onclick="submit();"> Enter </button>
+        </div>
+
+        <div id="display" class="noselect">
+
+<!-- Modifying anything ABOVE this line isn't recommended unless you have HTML/CSS/JS experience -->
+			
+			<!-- 1st row -->
+            <div onclick="vib();mfd.keyTap('numlock');">
+                <span>
+                    Num<br>
+                    Lock
+                </span>
+            </div>
+            <div onclick="vib();mfd.keyTap('/');">
+                <span>
+                    /
+                </span>
+            </div>
+            <!-- <div onclick="vib();mfd.keyTap('8', ['shift']);"> -->
+			<div onclick="vib();mfd.keyTap('\*')">
+                <span>
+                    *
+                </span>
+            </div>
+            <div onclick="vib();mfd.keyTap('-');">
+                <span>
+                    -
+                </span>
+            </div>
+
+            <!-- 2nd row -->
+            <div onclick="vib();mfd.keyTap('num7');">
+                <span>
+                    7
+                </span>
+            </div>
+            <div onclick="vib();mfd.keyTap('num8');">
+                <span>
+                    8
+                </span>
+            </div>
+            <div onclick="vib();mfd.keyTap('num9');">
+                <span>
+                    9
+                </span>
+            </div>
+
+            <!-- 3rd row -->
+            <div onclick="vib();mfd.keyTap('num4');">
+                <span>
+                    4
+                </span>
+            </div>
+            <div onclick="vib();mfd.keyTap('num5');">
+                <span>
+                    5
+                </span>
+            </div>
+            <div onclick="vib();mfd.keyTap('num6');">
+                <span>
+                    6
+                </span>
+            </div>
+
+            <!-- 4th row -->
+            <div onclick="vib();mfd.keyTap('num1');">
+                <span>
+                    1
+                </span>
+            </div>
+            <div onclick="vib();mfd.keyTap('num2');">
+                <span>
+                    2
+                </span>
+            </div>
+            <div onclick="vib();mfd.keyTap('num3');">
+                <span>
+                    3
+                </span>
+            </div>
+
+            <!-- 5th row -->
+            <div style="grid-row: 5; grid-column: 1/3;" onclick="vib();mfd.keyTap('num0');">
+                <span>
+                    0
+                </span>
+            </div>
+            <div onclick="vib();mfd.keyTap('.');">
+                <span>
+                    .
+                </span>
+            </div>
+
+            <!-- side buttons -->
+            <div style="grid-row: 2/4; grid-column: 4;" onclick="vib();mfd.keyTap('=', ['shift']);">
+                <span>
+                    +
+                </span>
+            </div>
+            <div style="grid-row: 4/6; grid-column: 4;" onclick="vib();mfd.keyTap('enter');">
+                <span>
+                    Enter
+                </span>
+            </div>
+
+<!-- Modifying anything BELOW this line isn't recommended unless you have HTML/CSS/JS experience -->
+
+        </div>
+
+        <script src="script.js"></script>
+    </body>
+</html>

@@ -1,7 +1,7 @@
 
 const $start = document.getElementById('start');
 const $enter = document.getElementById('enter');
-const $mfd = document.getElementById('mfd');
+const $display = document.getElementById('display');
 const $keyfield = document.getElementById('keyfield');
 
 $keyfield.style.display = 'none';
@@ -45,15 +45,15 @@ function submit () {
 
     function login () {
         // making it full screen
-        let rfs = $mfd.requestFullscreen || $mfd.webkitRequestFullScreen || $mfd.mozRequestFullScreen;
-        rfs.call($mfd);
+        let rfs = $display.requestFullscreen || $display.webkitRequestFullScreen || $display.mozRequestFullScreen;
+        if (rfs) rfs.call($display);
 
         // switching out button for the grid
         $start.style.display = 'none';
-        $mfd.style.display = 'grid';
+        $display.style.display = 'grid';
         
         // animating button fade-in
-        const buttons = $mfd.children;
+        const buttons = $display.children;
         const fadeInStagger = 50; // in ms
         for (let i=0; i < buttons.length; i++) {
             setTimeout(() => buttons[i].style.opacity = 1, i*fadeInStagger);

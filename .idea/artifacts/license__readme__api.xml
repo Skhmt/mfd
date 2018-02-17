@@ -4,6 +4,8 @@
     <root id="root">
       <element id="file-copy" path="$PROJECT_DIR$/license.txt" />
       <element id="file-copy" path="$PROJECT_DIR$/readme.md" />
+      <element id="file-copy" path="$PROJECT_DIR$/api.md" />
+      <element id="file-copy" path="$PROJECT_DIR$/vJoy.md" />
     </root>
   </artifact>
 </component>

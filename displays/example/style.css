@@ -33,7 +33,7 @@ body {
 
 /* Grid layout */
 
-#mfd {
+#display {
     width: calc(100% - 20px);
     height: calc(100% - 20px);
     padding: 10px;
@@ -45,7 +45,7 @@ body {
     grid-template-rows: repeat(5, 1fr);
 }
 
-#mfd div {
+#display div {
     text-align: center;
     min-width: 0;
 	min-height: 0;
@@ -61,7 +61,7 @@ body {
     height: 60%;
 }
 
-#mfd div span {
+#display div span {
     display: block;
     position: relative;
     top: 50%;

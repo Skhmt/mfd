@@ -1,63 +1,93 @@
+
 import com.sun.jna.*
-import com.sun.jna.ptr.IntByReference
-import com.sun.jna.ptr.LongByReference
+import com.sun.jna.ptr.*
+import com.sun.jna.platform.win32.*
 
 class VJoy(path: String) {
     private val vj = Native.loadLibrary(path, vjdll::class.java)
 
-    // constants
-    val HID_USAGE_X = "30".toInt(16)
-    val HID_USAGE_Y = "31".toInt(16)
-    val HID_USAGE_Z = "32".toInt(16)
-    val HID_USAGE_RX = "33".toInt(16)
-    val HID_USAGE_RY = "34".toInt(16)
-    val HID_USAGE_RZ = "35".toInt(16)
-    val HID_USAGE_SL0 = "36".toInt(16)
-    val HID_USAGE_SL1 = "37".toInt(16)
-    val HID_USAGE_WHL = "38".toInt(16)
-    val HID_USAGE_POV = "39".toInt(16)
-
-    var enabled: Boolean = vj.vJoyEnabled()
-    var manufacturer: String = vj.GetvJoyManufacturerString().toString()
-    var product: String = vj.GetvJoyProductString().toString()
-    var serialNumber: String = vj.GetvJoySerialNumberString().toString()
-    var version: Short = vj.GetvJoyVersion()
-    var maxDevices: Int = getVJMaxDevices()
-    var existingDevices: Int = getNumberExistingVJD()
-
-    fun driverMatch(driver1: Short?, driver2: Short?): Boolean {
-        return vj.DriverMatch(driver1, driver2)
+    fun axisEnum(axis: String): Int {
+        val lowerAxis = axis.toLowerCase()
+        return when (lowerAxis) {
+            "x", "hid_usage_x" -> 0x30
+            "y", "hid_usage_y" -> 0x31
+            "z", "hid_usage_z" -> 0x32
+            "rx", "hid_usage_rx" -> 0x33
+            "ry", "hid_usage_ry" -> 0x34
+            "rz", "hid_usage_rz" -> 0x35
+            "sl0", "hid_usage_sl0" -> 0x36
+            "sl1", "hid_usage_sl1" -> 0x37
+            "whl", "hid_usage_whl" -> 0x38
+            "pov", "hid_usage_pov" -> 0x39
+            else -> 0
+        }
     }
 
-    fun vjdButtonNumber(rID: Int): Int {
+    fun vJoyEnabled(): Boolean {
+        return vj.vJoyEnabled()
+    }
+
+    fun getvJoyManufacturerString(): String {
+        return vj.GetvJoyManufacturerString().toString()
+    }
+
+    fun getvJoyProductString(): String {
+        return vj.GetvJoyProductString().toString()
+    }
+
+    fun getvJoySerialNumberString(): String {
+        return vj.GetvJoySerialNumberString().toString()
+    }
+
+    fun getvJoyVersion(): Short {
+        return vj.GetvJoyVersion()
+    }
+
+    fun getvJoyMaxDevices(): Int {
+        val maxDevs = IntByReference()
+        return if (vj.GetvJoyMaxDevices(maxDevs)) maxDevs.value
+        else 0
+    }
+
+    fun getNumberExistingVJD(): Int {
+        val existingDevs = IntByReference()
+        return if (vj.GetNumberExistingVJD(existingDevs)) existingDevs.value
+        else 0
+    }
+
+    fun driverMatch(dllVer: Short?, driverVer: Short?): Boolean {
+        return vj.DriverMatch(dllVer, driverVer)
+    }
+
+    fun getVJDButtonNumber(rID: Int): Int {
         return vj.GetVJDButtonNumber(rID)
     }
 
-    fun vjdDiscPovNumber(rID: Int): Int {
+    fun getVJDDiscPovNumber(rID: Int): Int {
         return vj.GetVJDDiscPovNumber(rID)
     }
 
-    fun vjdContPovNumber(rID: Int): Int {
+    fun getVJDContPovNumber(rID: Int): Int {
         return vj.GetVJDContPovNumber(rID)
     }
 
-    fun vjdHasAxis(rID: Int, axis: Int): Boolean {
-        return vj.GetVJDAxisExist(rID, axis)
+    fun getVJDAxisExist(rID: Int, axis: String): Boolean {
+        return vj.GetVJDAxisExist(rID, axisEnum(axis))
     }
 
-    fun vjdAxisMax(rID: Int, axis: Int): Long {
+    fun getVJDAxisMax(rID: Int, axis: String): Long {
         val max = LongByReference()
-        vj.GetVJDAxisMax(rID, axis, max)
+        vj.GetVJDAxisMax(rID, axisEnum(axis), max)
         return max.value
     }
 
-    fun vjdAxisMin(rID: Int, axis: Int): Long {
+    fun getVJDAxisMin(rID: Int, axis: String): Long {
         val min = LongByReference()
-        vj.GetVJDAxisMin(rID, axis, min)
+        vj.GetVJDAxisMin(rID, axisEnum(axis), min)
         return min.value
     }
 
-    fun vjdStatus(rID: Int): String {
+    fun getVJDStatus(rID: Int): String {
         val status = vj.GetVJDStatus(rID)
         when (status) {
             0 -> return "VJD_STAT_OWN"
@@ -69,19 +99,19 @@ class VJoy(path: String) {
         }
     }
 
-    fun vjdExists(rID: Int): Boolean {
+    fun isVJDExists(rID: Int): Boolean {
         return vj.isVJDExists(rID)
     }
 
-    fun vjdOwner(rID: Int): Int {
+    fun getOwnerPid(rID: Int): Int {
         return vj.GetOwnerPid(rID)
     }
 
-    fun vjdAcquire(rID: Int): Boolean {
+    fun acquireVJD(rID: Int): Boolean {
         return vj.AcquireVJD(rID)
     }
 
-    fun vjdRelinquish(rID: Int) {
+    fun relinquishVJD(rID: Int) {
         vj.RelinquishVJD(rID)
     }
 
@@ -89,55 +119,41 @@ class VJoy(path: String) {
 //        return vj.UpdateVJD(rID)
 //    }
 
-    fun vjdSetAxis(value: Long, rID: Int, axis: Int): Boolean {
-        return vj.SetAxis(value, rID, axis)
+    fun setAxis(value: Long, rID: Int, axis: String): Boolean {
+        return vj.SetAxis(value, rID, axisEnum(axis))
     }
 
     // nBtn can be 1-128
-    fun vjdSetBtn(value: Boolean, rID: Int, nBtn: Short): Boolean {
+    fun setBtn(value: Boolean, rID: Int, nBtn: Short): Boolean {
         return vj.SetBtn(value, rID, nBtn)
     }
 
     // value can be 0: north/forwards, 1: east/right, 2: south/back, 3: west/left, -1 neutral
     // nPov can be 1-4
-    fun vjdDiscPov(value: Int, rID: Int, nPov: Short): Boolean {
+    fun setDiscPov(value: Int, rID: Int, nPov: Short): Boolean {
         return vj.SetDiscPov(value, rID, nPov)
     }
 
     // value can be -1 to 35999 in units of 1/100th of a degree
     // nPov can be 1-4
-    fun vjdContPov(value: Int, rID: Int, nPov: Short): Boolean {
+    fun setContPov(value: Int, rID: Int, nPov: Short): Boolean {
         return vj.SetContPov(value, rID, nPov)
     }
 
-    fun vjdReset(rID: Int): Boolean {
+    fun resetVJD(rID: Int): Boolean {
         return vj.ResetVJD(rID)
     }
 
-    fun vjdResetBtns(rID: Int): Boolean {
+    fun resetButtons(rID: Int): Boolean {
         return vj.ResetButtons(rID)
     }
 
-    fun vjdResetPovs(rID: Int): Boolean {
+    fun resetPovs(rID: Int): Boolean {
         return vj.ResetPovs(rID)
     }
 
     fun resetAll() {
         vj.ResetAll()
-    }
-
-    // Internal use helper functions
-
-    private fun getVJMaxDevices(): Int {
-        val maxDevs = IntByReference()
-        return if (vj.GetvJoyMaxDevices(maxDevs)) maxDevs.value
-        else 0
-    }
-
-    private fun getNumberExistingVJD(): Int {
-        val existingDevs = IntByReference()
-        return if (vj.GetNumberExistingVJD(existingDevs)) existingDevs.value
-        else 0
     }
 
     // the dll
@@ -217,4 +233,123 @@ class VJoy(path: String) {
         // ...
     }
 
+}
+
+// example output
+fun main (args: Array<String>) {
+    val dllName = "vJoyInterface.dll"
+    var dllPath: String
+    var vj: VJoy
+    try {
+        dllPath = Advapi32Util.registryGetStringValue(WinReg.HKEY_LOCAL_MACHINE,
+                "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{8E31F76F-74C3-47F1-9550-E041EEDC5FBB}_is1",
+                "DllX64Location")
+        println("vJoy x64 dll location: $dllPath")
+    } catch(e: com.sun.jna.platform.win32.Win32Exception) {
+        try {
+            dllPath = Advapi32Util.registryGetStringValue(WinReg.HKEY_LOCAL_MACHINE,
+                    "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{8E31F76F-74C3-47F1-9550-E041EEDC5FBB}_is1",
+                    "DllX86Location")
+            println("vJoy x86 dll location: $dllPath")
+        } catch(f: com.sun.jna.platform.win32.Win32Exception) {
+            println("vJoy not installed properly")
+            return
+        }
+    }
+
+    vj = VJoy("$dllPath\\$dllName")
+
+    if (vj.vJoyEnabled()) {
+        println("Vendor: ${vj.getvJoyManufacturerString()}")
+        println("Product: ${vj.getvJoyProductString()}")
+        println("Version: ${vj.getvJoySerialNumberString()}")
+        println("vJoy version: ${vj.getvJoyVersion()}")
+        println("Driver match: ${vj.driverMatch(null, null)}") // normally you would put the dll and driver versions here
+
+        println("Maximum vJoy Devices: ${vj.getvJoyMaxDevices()}")
+        println("Existing vJoy Devices: ${vj.getNumberExistingVJD()}")
+
+        for (i in 1..vj.getNumberExistingVJD()) {
+            var status = vj.getVJDStatus(i)
+            println("---- Device rID: $i ----")
+            println("Device Exists: ${vj.isVJDExists(i)}")
+            println("Device Owner's PID: ${vj.getOwnerPid(i)} (-13 is free, -12 is missing, -11 is an error)")
+            println("Device Status: $status")
+            println("Buttons: ${vj.getVJDButtonNumber(i)}")
+            println("POV (Disc) hats: ${vj.getVJDDiscPovNumber(i)}")
+            println("POV (Cont) hats: ${vj.getVJDContPovNumber(i)}")
+
+            // Acquire device
+            if (status == "VJD_STAT_OWN" || status == "VJD_STAT_FREE") {
+                if (vj.acquireVJD(i)) {
+                    println("Acquired vJoy Device.")
+                } else {
+                    println("Failed to acquire vJoy Device.")
+                }
+            }
+            status = vj.getVJDStatus(i)
+
+            // print axis information and test it
+            arrayOf("x", "y", "z", "rx", "ry", "rz", "sl0", "sl1", "whl", "pov").forEach{
+                if (vj.getVJDAxisExist(i, it)) {
+                    println("$it: ${vj.getVJDAxisMin(i, it)} to ${vj.getVJDAxisMax(i, it)}")
+                    if (status == "VJD_STAT_OWN") {
+                        vj.setAxis(vj.getVJDAxisMax(i, it), i, it)
+                        Thread.sleep(250)
+                        vj.setAxis(0, i, it)
+                        Thread.sleep(250)
+                    }
+                }
+            }
+
+            if (status == "VJD_STAT_OWN") {
+                // Test buttons
+                for (b in 1..vj.getVJDButtonNumber(i)) {
+                    vj.setBtn(true, i, b.toShort())
+                    Thread.sleep(250)
+                    vj.setBtn(false, i, b.toShort())
+                }
+
+                // Test disc povs
+                for (d in 1..vj.getVJDDiscPovNumber(i)) {
+                    vj.setDiscPov(0, i, d.toShort()) // north
+                    Thread.sleep(250)
+                    vj.setDiscPov(1, i, d.toShort()) // east
+                    Thread.sleep(250)
+                    vj.setDiscPov(2, i, d.toShort()) // south
+                    Thread.sleep(250)
+                    vj.setDiscPov(3, i, d.toShort()) // west
+                    Thread.sleep(250)
+                    vj.setDiscPov(-1, i, d.toShort()) // neutral
+                }
+
+                // Test cont povs
+                for (c in 1..vj.getVJDContPovNumber(i)) {
+                    val max = vj.getVJDAxisMax(i, "pov").toInt()
+                    vj.setContPov(max, i, c.toShort()) // north
+                    Thread.sleep(160)
+                    vj.setContPov(max*1/8, i, c.toShort()) // northeast
+                    Thread.sleep(160)
+                    vj.setContPov(max*1/4, i, c.toShort()) // east
+                    Thread.sleep(160)
+                    vj.setContPov(max*3/8, i, c.toShort()) // southeast
+                    Thread.sleep(160)
+                    vj.setContPov(max*2/4, i, c.toShort()) // south
+                    Thread.sleep(160)
+                    vj.setContPov(max*5/8, i, c.toShort()) // southwest
+                    Thread.sleep(160)
+                    vj.setContPov(max*3/4, i, c.toShort()) // west
+                    Thread.sleep(160)
+                    vj.setContPov(max*7/8, i, c.toShort()) // northwest
+                    Thread.sleep(160)
+                    vj.setContPov(-1, i, c.toShort()) // neutral
+                }
+            }
+
+            // Reset all
+            vj.resetAll()
+
+        }
+
+    }
 }

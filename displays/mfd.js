@@ -77,6 +77,7 @@ let mfd = (function () {
 				fetch(_apiPath, {method: 'POST', body})
 				.then(res => {
 					if (!res.ok) {
+						process(); // keep going
 						throw 'error'
 					}
 					else if (res.status == 200) { // there's a response
@@ -165,7 +166,8 @@ let mfd = (function () {
 			if (modifiers.includes('ctrl')) m.keyOn('ctrl');
 			if (modifiers.includes('alt')) m.keyOn('alt');
 			if (modifiers.includes('ralt')) m.keyOn('ralt');
-			if (modifiers.includes('win')) m.keyOn('windows');
+			if (modifiers.includes('win') || modifiers.includes('windows')) m.keyOn('windows');
+			if (modifiers.includes('cmd') || modifiers.includes('command')) m.keyOn('command');
 		}
 		m.keyOn(key).keyOff(key);
 		if (modifiers) {
@@ -173,7 +175,8 @@ let mfd = (function () {
             if (modifiers.includes('ctrl')) m.keyOff('ctrl');
             if (modifiers.includes('alt')) m.keyOff('alt');
             if (modifiers.includes('ralt')) m.keyOff('ralt');
-            if (modifiers.includes('win')) m.keyOff('windows');
+            if (modifiers.includes('win') || modifiers.includes('windows')) m.keyOff('windows');
+            if (modifiers.includes('cmd') || modifiers.includes('command')) m.keyOff('command');
 		}
 		return this;
 	};
@@ -220,8 +223,8 @@ let mfd = (function () {
 		return this;
 	};
 	m.mC = m.mouseClick;
-	
-	// utility function
+
+	// utility function for buttons
 	function getBtn(button) {
 		// assuming 'button' is a string
 		switch(button) {
@@ -315,10 +318,104 @@ let mfd = (function () {
 	};
 	m.gS = m.getScreenshot;
 
-	m.changePass = function (newPass, fn) {
-	    if (typeof newPass !== 'string') console.error('Bad input, use mfd.changePass(newPassword[, fn])')
-	    else {
-	        queue({
+    // vJoy api, mfd.vj.[...]()
+
+    m.vJoy = {};
+
+    m.vJoy.info = function (fn) {
+        queue({
+            action: 'vj_info',
+            callback: json => {
+                if (typeof fn === 'function') {
+                    fn(json);
+                }
+            }
+        });
+    };
+
+    m.vJoy.reset = function () {
+        queue({action: 'vj_resetall'});
+    };
+
+    m.vJoy.device = function (rID) {
+        if (typeof rID !== 'number') console.error('Bad input, use mfd.vJoy.device(rID)');
+        let dev = {};
+
+        dev.info = function (fn) {
+            queue({
+               action: 'vj_vjd_info',
+               data: rID,
+               callback: json => {
+                   if (typeof fn === 'function') {
+                       fn(json);
+                   }
+               }
+            });
+        };
+
+        dev.acquire = function () {
+            queue({action: 'vj_vjd_acquire', data: rID});
+        };
+
+        dev.relinquish = function () {
+            queue({action: 'vj_vjd_relinquish', data: rID});
+        };
+
+        dev.setAxis = function (axis, value) {
+            if (typeof axis !== 'string' || typeof value !== 'number') {
+                console.error('Bad input, use mfd.vJoy.device(rID).setAxis(axis, value)');
+            }
+            else {
+                queue({action: 'vj_vjd_setaxis', data: `${rID},${axis},${value|0}`});
+            }
+        };
+
+        dev.setBtn = function (btn, value) {
+            if (typeof btn !== 'number' || typeof value !== 'boolean') {
+                console.error('Bad input, use mfd.vJoy.device(rID).setBtn(btn, value)');
+            }
+            else {
+                queue({action: 'vj_vjd_setbtn', data: `${rID},${btn|0},${value}`});
+            }
+        };
+
+        dev.setPovDiscrete = function (nPov, value) {
+            if (typeof nPov !== 'number' || typeof value !== 'number') {
+                console.error('Bad input, use mfd.vJoy.device(rID).setPovDiscrete(npov, value)');
+            }
+            else {
+                queue({action: 'vj_vjd_setdiscpov', data: `${rID},${nPov|0},${value|0}`});
+            }
+        };
+
+        dev.setPovContinuous = function (nPov, value) {
+            if (typeof nPov !== 'number' || typeof value !== 'number') {
+                console.error('Bad input, use mfd.vJoy.device(rID).setPovContinuous(npov, value)');
+            }
+            else {
+                queue({action: 'vj_vjd_setcontpov', data: `${rID},${nPov|0},${value|0}`});
+            }
+        };
+
+        dev.reset = function () {
+            queue({action: 'vj_vjd_reset', data: `${rID}`});
+        };
+
+        dev.resetBtns = function () {
+            queue({action: 'vj_vjd_resetbtns', data: `${rID}`});
+        };
+
+        dev.resetPovs = function () {
+            queue({action: 'vj_vjd_resetpovs', data: `${rID}`});
+        };
+
+        return dev;
+    }
+
+    m.changePass = function (newPass, fn) {
+        if (typeof newPass !== 'string') console.error('Bad input, use mfd.changePass(newPassword[, fn])')
+        else {
+            queue({
                 action: 'changepass',
                 data: newPass,
                 callback: function (res) {
@@ -328,8 +425,9 @@ let mfd = (function () {
                      if (typeof fn === 'function') fn();
                 } // close callback
             }); // close queue
-	    }
-	}
+        }
+        return this;
+    }
 
 	m.crypto = (function () {
 		let c = {};

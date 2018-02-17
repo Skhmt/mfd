@@ -56,7 +56,7 @@ class MFDCrypto() {
     var iterations = 10000
     var salt = ByteArray(0)
     var key = ByteArray(0)
-    var random = SecureRandom.getInstanceStrong()
+    var random = SecureRandom()
 
     fun randomPassword(length: Int): String {
         val alphaUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -66,8 +66,10 @@ class MFDCrypto() {
 
         var password = ""
         for (i in 1..length) {
-            password += chars[random.nextInt(chars.length)]
+            val nextCharIndex = random.nextInt(chars.length)
+            password += chars[nextCharIndex]
         }
+
         return password
     }
 

@@ -135,6 +135,7 @@ fun k2e(input: String): Int {
         "backspace" -> return KeyEvent.VK_BACK_SPACE
         "space", " " -> return KeyEvent.VK_SPACE
         "windows" -> return KeyEvent.VK_WINDOWS
+        "command" -> return KeyEvent.VK_META
         "shift" -> return KeyEvent.VK_SHIFT
         "ctrl" -> return KeyEvent.VK_CONTROL
         "alt" -> return KeyEvent.VK_ALT

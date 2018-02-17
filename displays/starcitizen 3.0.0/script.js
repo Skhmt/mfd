@@ -1,12 +1,12 @@
 
 const $start = document.getElementById('start');
 const $enter = document.getElementById('enter');
-const $mfd = document.getElementById('mfd');
+const $display = document.getElementById('display');
 const $keyfield = document.getElementById('keyfield');
-const $displays = document.getElementById('displays');
+const $tabcontent = document.getElementById('tabcontent');
 const $tabs = document.getElementById('tabs');
 
-const displayChildren = $displays.children;
+const contentChildren = $tabcontent.children;
 const tabChildren = $tabs.children;
 
 $keyfield.style.display = 'none';
@@ -51,12 +51,12 @@ function submit () {
 
 function login () {
     // making it full screen
-    let rfs = $mfd.requestFullscreen || $mfd.webkitRequestFullScreen || $mfd.mozRequestFullScreen;
-    rfs.call($mfd);
+    let rfs = $display.requestFullscreen || $display.webkitRequestFullScreen || $display.mozRequestFullScreen;
+    if (rfs) rfs.call($display);
 
     // switching out button for the grid
     $start.style.display = 'none';
-    $mfd.style.display = 'block';
+    $display.style.display = 'block';
 	
     // animating button fade-in	
     const fadeStagger = 50; // in ms
@@ -88,8 +88,8 @@ function setTab(tabName) {
     const fadeStagger = 32;
 
     const displayName = tabName + '_display';
-    for (let c = 0; c < displayChildren.length; c++) {
-        const disp = displayChildren[c];
+    for (let c = 0; c < contentChildren.length; c++) {
+        const disp = contentChildren[c];
         const dispButtons = disp.children;
         if (disp.id === displayName) {
             disp.style.display = 'grid';

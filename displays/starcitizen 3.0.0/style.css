@@ -9,11 +9,12 @@ body {
 #start {
     position: relative;
     top: 50%;
+    color: #ffffff;
 }
 #start button {
     background: rgba(0,0,0,0);
-    font-family: "Inconsolata", "Consolas", "Menlo", monospace;
     color: #ffffff;
+    font-family: "Inconsolata", "Consolas", "Menlo", monospace;
     font-size: 20px;
     text-decoration: none;
     padding: 10px;
@@ -33,7 +34,7 @@ body {
 
 /* Grid layout */
 
-#mfd {
+#display {
     width: calc(100% - 20px);
     height: calc(100% - 20px);
     padding: 10px;
@@ -49,18 +50,18 @@ body {
     grid-template-columns: repeat(3, 1fr);
 }
 
-#displays {
+#tabcontent {
     height: calc(80% - 20px);
 }
 
-#displays div {
+#tabcontent div {
     height: 100%;
     padding: 10px;
     grid-gap: 10px 10px;
     grid-template-columns: repeat(6, 1fr);
 }
 
-#displays div div, #tabs div {
+#tabcontent div div, #tabs div {
     text-align: center;
     min-width: 0;
     min-height: 0;
@@ -70,7 +71,7 @@ body {
     opacity: 0;
 }
 
-#displays div div span, #tabs div span {
+#tabcontent div div span, #tabs div span {
     display: block;
     position: relative;
     top: 50%;

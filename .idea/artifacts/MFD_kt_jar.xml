@@ -1,7 +1,7 @@
 <component name="ArtifactManager">
   <artifact type="jar" build-on-make="true" name="MFD-kt:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/MFD_kt_jar</output-path>
-    <root id="archive" name="MFD-kt.jar">
+    <root id="archive" name="MFD.jar">
       <element id="module-output" name="MFD-kt" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/spark-kotlin-1.0.0-alpha-jar-with-dependencies.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$KOTLIN_BUNDLED$/lib/kotlin-stdlib.jar" path-in-jar="/" />
@@ -11,6 +11,9 @@
       <element id="extracted-dir" path="$KOTLIN_BUNDLED$/lib/kotlin-stdlib-jre8.jar" path-in-jar="/" />
       <element id="dir-copy" path="$PROJECT_DIR$/resources" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/json-20170516.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/slf4j-nop-1.7.25.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jna-4.5.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jna-platform-4.5.1.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

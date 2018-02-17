@@ -30,8 +30,8 @@
 <body>
 	<div class="center">
 		<h1>Multi-Function Display</h1>
-		<div id="ip"></div>
-		<div id="pass"></div>
+		<div id="iparea"></div>
+		<div id="passarea"></div>
 		<br>
 		<div id="qrcode" style="text-align: center;"></div>
         <h2>Displays</h2>
@@ -40,12 +40,11 @@
 	
 
     <script>
-		let parsedURL = new URL(window.location.href);
-		const ip = parsedURL.searchParams.get('ip');
-		let pass = parsedURL.hash.substring(1);
+		const ip = window.location.search.split('?ip=')[1];
+		let pass = window.location.hash.substring(1);
 
-		const $ip = document.getElementById('ip');
-		const $pass = document.getElementById('pass');
+		const $ip = document.getElementById('iparea');
+		const $pass = document.getElementById('passarea');
 		const $qr = document.getElementById('qrcode');
 		const $displays = document.getElementById('displays');
 
@@ -97,7 +96,7 @@
 		    let output = '';
 		    res.forEach(name => {
 		        const capName = name[0].toUpperCase() + name.substring(1);
-		        output += `<div><strong><a href="/${capName}/">${capName}</a></strong></div>`;
+		        output += `<div><strong><a href="/${name}/">${capName}</a></strong></div>`;
 		    });
 		    $displays.innerHTML = output;
 		});

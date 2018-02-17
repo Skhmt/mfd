@@ -11,9 +11,15 @@
         <div id="start">
             <input type="text" id="keyfield">
             <button id="enter" class="noselect" onclick="submit();"> Enter </button>
+            <p>
+                This is for Star Citizen 3.0.0 (alpha)
+            </p>
+            <p>
+                This requires using the Keyboard (Advanced) profile for Flight or manually re-binding your keys to match these by default
+            </p>
         </div>
 
-        <div id="mfd" class="noselect">
+        <div id="display" class="noselect">
 
             <!-- Tab system -->
             <div id="tabs">
@@ -29,7 +35,7 @@
             </div>
 
 <!-- Modifying anything ABOVE this line isn't recommended unless you have HTML/CSS/JS experience -->
-			<div id="displays">
+			<div id="tabcontent">
                 <!-- ////////////////////   TAB 1   //////////////////// -->
                 <div id="tab1_display" style="grid-template-columns: repeat(5, 1fr);">
                     <!-- First row -->
@@ -64,13 +70,13 @@
                         </span>
                     </div>
                     <!-- Second row -->
-                    <div class="peterriver" ontouchstart="vib();mfd.keyOn('alt').keyOn('num8');" ontouchend="mfd.keyOff('num8').keyOn('alt');">
+                    <div class="peterriver" ontouchstart="vib();mfd.keyOn('alt').keyOn('num8');" ontouchend="mfd.keyOff('num8').keyOff('alt');">
                         <span>
                             <i class="fas fa-plus fa-lg"></i><br>
                             + Cooling
                         </span>
                     </div>
-                    <div class="sunflower" ontouchstart="vib();mfd.keyOn('alt').keyOn('num5');" ontouchend="mfd.keyOff('num5').keyOn('alt');">
+                    <div class="sunflower" ontouchstart="vib();mfd.keyOn('alt').keyOn('num5');" ontouchend="mfd.keyOff('num5').keyOff('alt');">
                         <span>
                             <i class="fas fa-plus fa-lg"></i><br>
                             + Pow
@@ -95,13 +101,13 @@
                         </span>
                     </div>
                     <!-- Third row -->
-                    <div class="peterriver" ontouchstart="vib();mfd.keyOn('alt').keyOn('num7');" ontouchend="mfd.keyOff('num7').keyOn('alt');">
+                    <div class="peterriver" ontouchstart="vib();mfd.keyOn('alt').keyOn('num7');" ontouchend="mfd.keyOff('num7').keyOff('alt');">
                         <span>
                             <i class="fas fa-minus fa-lg"></i><br>
                             - Cooling
                         </span>
                     </div>
-                    <div class="sunflower" ontouchstart="vib();mfd.keyOn('alt').keyOn('num4');" ontouchend="mfd.keyOff('num4').keyOn('alt');">
+                    <div class="sunflower" ontouchstart="vib();mfd.keyOn('alt').keyOn('num4');" ontouchend="mfd.keyOff('num4').keyOff('alt');">
                         <span>
                             <i class="fas fa-minus fa-lg"></i><br>
                             - Pow
@@ -197,7 +203,7 @@
                             Decouple Mode Toggle
                         </span>
                     </div>
-                    <div class="clouds" onclick="vib();mfd.keyTap('n', ['alt']);">
+                    <div class="clouds" onclick="vib();mfd.keyTap('n');">
                         <span>
                             <i class="fas fa-globe fa-lg"></i><br>
                             Landing Mode

@@ -3,7 +3,6 @@
  *
  * This creates a SystemTray and a series of webservers.
  * Port 80 will be the management page.
- * Port 6331, 6332, 6333, and 6334 will be for setting up 4 separate MFDs
  *
  */
 

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="net.java.dev.jna:jna-platform:4.5.1" type="repository">
+    <properties maven-id="net.java.dev.jna:jna-platform:4.5.1" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/jna-platform-4.5.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jna-4.5.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -120,6 +120,13 @@ It can also be used for desktop macros, or pretty much anything really.
 
 # Changelog
 
+* 1.4.0 - 3Sep18
+  * Added the escape key (`esc`) to the API
+  * Updated included displays
+  * Added github repository link to the taskbar menu
+  * Cleaned up some dependencies
+  * Fixed a bug with blank passwords, they should work better now (but still aren't recommended for security reasons)
+  * Slightly modified the main page
 * 1.3.0 - 17Feb18
   * Added support for the macOS ⌘ key
   * Added the `-ip [ip address]` command line switch to force the config page to use your supplied ip address so the QR code works with multiple-NIC systems - this doesn't change how the program works at all
@@ -156,8 +163,10 @@ It can also be used for desktop macros, or pretty much anything really.
 * 0.1.0 - 29Dec17
   * Initial release
   
-# Features being worked on
+# Features/bugs being worked on
 
+* Make a nicer main page
+* Fix a bug with displays not going full screen if you have to enter a password
+* GUI-based simple display creator
 * Streamlabs-OBS support via JSON-RPC
 * Videos on how to use MFD
-* GUI-based simple display creator

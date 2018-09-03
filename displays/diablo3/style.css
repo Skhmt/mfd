@@ -1,0 +1,103 @@
+* {
+    box-sizing: border-box;
+}
+
+body { 
+    margin: 0;
+    text-align: center;
+    background-color: black;
+    user-select: none;
+    height: 100%;
+}
+
+#start {
+    position: relative;
+    top: 50%;
+}
+#start button {
+    background: rgba(0,0,0,1);
+    font-family: "Inconsolata", "Consolas", "Menlo", monospace;
+    color: #ffffff;
+    font-size: 20px;
+    text-decoration: none;
+    padding: 10px;
+    border: solid #DDD 4px;
+}
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Chrome and Opera */
+    cursor: default;
+    -webkit-user-drag: none;
+}
+
+/* Grid layout */
+
+#display {
+    width: 100%;
+    height: 100%;
+    padding: 50px;
+    display: none;
+    grid-gap: 50px 50px;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+
+    /* background image */
+    background-image: url("bg.png");
+    background-repeat: no-repeat;
+    background-position: top left;
+    background-color: black;
+}
+
+#display div {
+    text-align: center;
+    min-width: 0;
+	min-height: 0;
+	transition: opacity 0.5s;
+    opacity: 0;
+    height: 100%;
+    color: black;
+    font-size: 3em;
+}
+
+#display div span {
+    display: block;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* custom styling */
+
+@font-face {
+    font-family: sketchGothic;
+    src: url("Sketch Gothic School.ttf");
+}
+
+.emptyGrid {
+    grid-column: 1/7;
+}
+
+.toggleButton {
+    background-image: url("granite.png");
+    border-width: 2px;
+    border-style: solid;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-color: rgb(120,0,0);
+    box-shadow: 0px 0px 70px rgb(120,0,0);
+}
+
+.toggleButton span {
+    font-family: sketchGothic;
+    font-size: 80px;
+    text-shadow: 0px 0px 5px rgba(255,255,255,1);
+}
+
+.toggled {
+    border-color: greenyellow;
+    box-shadow: 0px 0px 70px greenyellow;
+}

@@ -11,16 +11,19 @@
 	<script src="mfd.js"></script>
 	<script src="qrcode.min.js"></script>
 	<style>
+		* {
+			box-sizing: border-box;
+		}
+
 		.center {
-			/* --width: 500px; */
-			/* --height: 600px; */
 			position: relative;
 			display: block;
-			top: calc(50% - calc(600px / 2));
-			left: calc(50vw - calc(500px / 2));
-			/* background-color: #4D8FAC; */
+			/* top: calc(50% - calc(600px / 2)); */
+			/* left: calc(50vw - calc(500px / 2)); */
+			/* top: 50%;
+			left: 50vw;
 			width: 500px;
-			height: 600px;
+			height: 600px; */
 			text-align: center;
 			color: #006442;
 			font-family: "Inconsolata", "Consolas", "Menlo", monospace;
@@ -41,14 +44,15 @@
 
     <script>
 		const ip = window.location.search.split('?ip=')[1];
-		let pass = window.location.hash.substring(1);
+		let pass;
+		if (window.location.hash) pass = window.location.hash.substring(2);
 
 		const $ip = document.getElementById('iparea');
 		const $pass = document.getElementById('passarea');
 		const $qr = document.getElementById('qrcode');
 		const $displays = document.getElementById('displays');
 
-		if (ip && pass) { // sent here by the taskbar
+		if (typeof(ip) !== 'undefined' && typeof(pass) !== 'undefined') { // sent here by the taskbar
 			$ip.innerHTML = `IP Address: <input value="${ip}">`;
 			$pass.innerHTML = `Passkey: <input id="passkey" value="${pass}">`;
 
@@ -58,7 +62,7 @@
 				const newPass = document.getElementById('passkey').value;
 				mfd.changePass(newPass, function () {
 					pass = newPass;
-					window.location.href = '#' + newPass;
+					window.location.href = '#.' + newPass;
 					setStorage();
 					setQR();
 				});
@@ -68,7 +72,7 @@
 			setQR();
 		}
 
-		if (pass) { // sent here by the QR code or the taskbar
+		if (typeof(pass) !== 'undefined') { // sent here by the QR code or the taskbar
 			mfd.getCrypto(() => { // get the salt and # iterations from the server API
 				mfd.crypto.generateKey(pass); // generate the key based on the given password, salt, and iterations
 				mfd.test(isValidKey => { // test the newly generated key
@@ -87,7 +91,7 @@
 
 		function setQR() {
 			$qr.innerHTML = '';
-			new QRCode($qr, `http://${ip}/#${pass}`);
+			new QRCode($qr, `http://${ip}/#.${pass}`);
 			document.querySelector('#qrcode img').style.margin = 'auto';
 		}
 

@@ -28,7 +28,7 @@ import java.io.FileFilter
 
 fun main(args: Array<String>) {
 
-    val version = "1.3.0"
+    val version = "1.4.0"
 
     var port = 80
     var verbose = false
@@ -516,13 +516,13 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                         if (vj == null) return@post vjError(request, response)
 
                         val json = JSONObject()
-                        json.put("enabled", vj.vJoyEnabled())
-                        json.put("manufacturer", vj.getvJoyManufacturerString())
-                        json.put("product", vj.getvJoyProductString())
-                        json.put("serialnumber", vj.getvJoySerialNumberString())
-                        json.put("version", vj.getvJoyVersion())
-                        json.put("maxDevices", vj.getvJoyMaxDevices())
-                        json.put("existingDevices", vj.getNumberExistingVJD())
+                        json.put("enabled", vj?.vJoyEnabled())
+                        json.put("manufacturer", vj?.getvJoyManufacturerString())
+                        json.put("product", vj?.getvJoyProductString())
+                        json.put("serialnumber", vj?.getvJoySerialNumberString())
+                        json.put("version", vj?.getvJoyVersion())
+                        json.put("maxDevices", vj?.getvJoyMaxDevices())
+                        json.put("existingDevices", vj?.getNumberExistingVJD())
 
                         println("${request.ip()}> vj_manufacturer")
                         status(200)
@@ -539,7 +539,7 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                         if (vj == null) return@post vjError(request, response)
 
                         val rID = data.toInt()
-                        if (!vj.isVJDExists(rID)) {
+                        if (!vj!!.isVJDExists(rID)) {
                             println("${request.ip()}> requested non-existent VJD: $rID")
                             status(404)
                             type("text/html")
@@ -547,14 +547,14 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                         }
 
                         val json = JSONObject()
-                        json.put("status", vj.getVJDStatus(rID))
-                        json.put("btnNumber", vj.getVJDButtonNumber(rID))
-                        json.put("discPovNumber", vj.getVJDDiscPovNumber(rID))
-                        json.put("contPovNumber", vj.getVJDContPovNumber(rID))
-                        json.put("ownerPid", vj.getOwnerPid(rID))
+                        json.put("status", vj?.getVJDStatus(rID))
+                        json.put("btnNumber", vj?.getVJDButtonNumber(rID))
+                        json.put("discPovNumber", vj?.getVJDDiscPovNumber(rID))
+                        json.put("contPovNumber", vj?.getVJDContPovNumber(rID))
+                        json.put("ownerPid", vj?.getOwnerPid(rID))
                         arrayOf("x", "y", "z", "rx", "ry", "rz", "sl0", "sl1", "whl", "pov").forEach{
-                            if (vj.getVJDAxisExist(rID, it)) {
-                                val max = vj.getVJDAxisMax(rID, it)
+                            if (vj!!.getVJDAxisExist(rID, it)) {
+                                val max = vj?.getVJDAxisMax(rID, it)
                                 json.put("${it}_max", max)
                             }
                         }
@@ -568,16 +568,16 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                         if (vj == null) return@post vjError(request, response)
 
                         val rID = data.toInt()
-                        if (!vj.isVJDExists(rID)) {
+                        if (!vj!!.isVJDExists(rID)) {
                             println("${request.ip()}> requested non-existent vjd: $rID")
                             status(404)
                             type("text/html")
                             return@post "<strong>Error 404</strong> Requested VJD does not exist"
                         }
 
-                        val status = vj.getVJDStatus(rID)
+                        val status = vj?.getVJDStatus(rID)
                         if (status == "VJD_STAT_OWN" || status == "VJD_STAT_FREE") {
-                            if (vj.acquireVJD(rID)) {
+                            if (vj!!.acquireVJD(rID)) {
                                 println("${request.ip()}> vj_vjd_acquire: $rID")
                                 status(204)
                             } else {
@@ -597,7 +597,7 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                         if (vj == null) return@post vjError(request, response)
 
                         val rID = data.toInt()
-                        vj.relinquishVJD(rID)
+                        vj?.relinquishVJD(rID)
 
                         println("${request.ip()}> vj_vjd_relinquish: $rID")
                         status(204)
@@ -610,9 +610,9 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                         val axis = params[1]
                         val value = params[2].toLong()
 
-                        val status = vj.getVJDStatus(rID)
+                        val status = vj?.getVJDStatus(rID)
                         if (status == "VJD_STAT_OWN") {
-                            if (vj.setAxis(value, rID, axis)) {
+                            if (vj!!.setAxis(value, rID, axis)) {
                                 println("${request.ip()}> vj_vjd_setaxis: $rID, $axis, $value")
                                 status(204)
                             } else {
@@ -636,9 +636,9 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                         val btn = params[1].toShort()
                         val value = params[2].toBoolean()
 
-                        val status = vj.getVJDStatus(rID)
+                        val status = vj?.getVJDStatus(rID)
                         if (status == "VJD_STAT_OWN") {
-                            if (vj.setBtn(value, rID, btn)) {
+                            if (vj!!.setBtn(value, rID, btn)) {
                                 println("${request.ip()}> vj_vjd_setbtn: $rID, $btn, $value")
                                 status(204)
                             } else {
@@ -662,9 +662,9 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                         val nPov = params[1].toShort()
                         val value = params[2].toInt()
 
-                        val status = vj.getVJDStatus(rID)
+                        val status = vj?.getVJDStatus(rID)
                         if (status == "VJD_STAT_OWN") {
-                            if (vj.setDiscPov(value, rID, nPov)) {
+                            if (vj!!.setDiscPov(value, rID, nPov)) {
                                 println("${request.ip()}> vj_vjd_setdiscpov: $rID, $nPov, $value")
                                 status(204)
                             } else {
@@ -688,9 +688,9 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                         val nPov = params[1].toShort()
                         val value = params[2].toInt()
 
-                        val status = vj.getVJDStatus(rID)
+                        val status = vj?.getVJDStatus(rID)
                         if (status == "VJD_STAT_OWN") {
-                            if (vj.setContPov(value, rID, nPov)) {
+                            if (vj!!.setContPov(value, rID, nPov)) {
                                 println("${request.ip()}> vj_vjd_setcontpov: $rID, $nPov, $value")
                                 status(204)
                             } else {
@@ -710,7 +710,7 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                         if (vj == null) return@post vjError(request, response)
 
                         val rID = data.toInt()
-                        if (vj.resetVJD(rID)) {
+                        if (vj!!.resetVJD(rID)) {
                             println("${request.ip()}> vj_vjd_relinquish: $rID")
                             status(204)
                         } else {
@@ -724,7 +724,7 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                         if (vj == null) return@post vjError(request, response)
 
                         val rID = data.toInt()
-                        if (vj.resetButtons(rID)) {
+                        if (vj!!.resetButtons(rID)) {
                             println("${request.ip()}> vj_vjd_resetbtns: $rID")
                             status(204)
                         } else {
@@ -738,7 +738,7 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                         if (vj == null) return@post vjError(request, response)
 
                         val rID = data.toInt()
-                        if (vj.resetPovs(rID)) {
+                        if (vj!!.resetPovs(rID)) {
                             println("${request.ip()}> vj_vjd_resetpovs: $rID")
                             status(204)
                         } else {
@@ -751,7 +751,7 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                     "vj_resetall" -> {
                         if (vj == null) return@post vjError(request, response)
 
-                        vj.resetAll()
+                        vj?.resetAll()
                         println("${request.ip()}> vj_resetall")
                         status(204)
                     }
@@ -799,12 +799,15 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
         // Create pop-up menu components
         val configItem = MenuItem("Config")
         val redditItem = MenuItem("/r/mfd")
+        val githubItem = MenuItem("GitHub repo")
         val exitItem = MenuItem("Exit")
 
         if (verbose) println("> Adding components to pop-up menu")
         // Add components to pop-up menu
         popup.add(configItem)
+        popup.addSeparator()
         popup.add(redditItem)
+        popup.add(githubItem)
         popup.addSeparator()
         popup.add(exitItem)
 
@@ -828,6 +831,17 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                 }
             }
         }
+        githubItem.addActionListener {
+            if (Desktop.isDesktopSupported()) {
+                val uri = "https://github.com/Skhmt/mfd"
+                try {
+                    Desktop.getDesktop().browse(URI(uri))
+                } catch (e: java.lang.UnsupportedOperationException) {
+                    println("Please visit the following URL:")
+                    println(uri)
+                }
+            }
+        }
         configItem.addActionListener {
             if (Desktop.isDesktopSupported()) {
                 var urlQuery: String
@@ -839,7 +853,7 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                     urlQuery = setIP
                 }
 
-                val uri = "http://localhost:$port/?ip=$urlQuery#$plainPassword"
+                val uri = "http://localhost:$port/?ip=$urlQuery#.$plainPassword"
 
                 println("Please visit the following URL:")
                 println(uri)

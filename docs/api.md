@@ -169,6 +169,7 @@ You probably won't need these unless you're re-writing large parts of the javasc
 * `enter`
 * `backspace`
 * `space`
+* `esc`
 
 These keys do not work on their own for `keyDown`/`keyUp`, you must use the corresponding number key with the `shift` modifier. They _do_ work with `typeString` assuming you have a US keyboard:
 * `!`

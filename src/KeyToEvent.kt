@@ -140,6 +140,7 @@ fun k2e(input: String): Int {
         "ctrl" -> return KeyEvent.VK_CONTROL
         "alt" -> return KeyEvent.VK_ALT
         "ralt" -> return KeyEvent.VK_ALT_GRAPH
+        "esc" -> return KeyEvent.VK_ESCAPE
 
     //        "" -> return KeyEvent.VK_
 

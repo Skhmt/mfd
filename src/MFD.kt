@@ -134,8 +134,9 @@ class MFD(
         if (verbose) println("> Setting the port")
         port(port)
         initExceptionHandler{
-            println("Error in initializing Spark - likely due to port conflict")
-            println(it)
+            if (it is java.net.BindException) println("Error, port $port already in use.")
+            else println(it)
+            System.exit(0)
         }
 
         if (verbose) println("> Setting static files location")

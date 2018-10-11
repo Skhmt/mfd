@@ -34,6 +34,8 @@ Gets the RGB values in the format: `{"red": 0, "green": 0, "blue": 0}`.
 Gets a screenshot in the format of a URL blob. Example: `mfd.getScreenshot(0,0,1920,1080, url => window.open(url))`
 ### `mfd.wait(time)` or `mfd.w(...)`
 Waits a certain amount of milliseconds (1/1000th of a second) before doing something else. Useful when chaining actions, like: `mfd.mouseClicK('right').wait(100).mouseClick('left');`
+### `mfd.getWindowTitle(_callback_)`
+Gets the title of the focused window as a string. Example: `mfd.getWindowTitle(title => alert(title)`
 
 ## vJoy Actions
 These are functions that only work on Windows with vJoy installed

@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact build-on-make="true" name="docs">
-    <output-path>$PROJECT_DIR$/out/artifacts/MFD_kt_jar</output-path>
+    <output-path>$PROJECT_DIR$/out/artifacts/MFD_jar</output-path>
     <root id="root">
       <element id="dir-copy" path="$PROJECT_DIR$/docs" />
     </root>

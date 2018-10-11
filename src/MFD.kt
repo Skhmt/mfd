@@ -6,11 +6,10 @@
  *
  */
 
+import com.sun.jna.Platform
 import com.sun.jna.platform.win32.Advapi32Util
 import com.sun.jna.platform.win32.WinReg
 import org.json.JSONArray
-import spark.kotlin.*
-
 import java.awt.*
 import java.awt.event.InputEvent
 import java.awt.image.BufferedImage
@@ -22,13 +21,13 @@ import javax.imageio.ImageIO
 import org.json.JSONObject
 import spark.Request
 import spark.Response
-import spark.Spark.initExceptionHandler
 import java.awt.event.KeyEvent
 import java.io.FileFilter
+import spark.Spark.*
 
 fun main(args: Array<String>) {
 
-    val version = "1.4.0"
+    val version = "1.5.0"
 
     var port = 80
     var verbose = false
@@ -65,21 +64,20 @@ fun main(args: Array<String>) {
     if (verbose) println("> --- MFD initialized")
 }
 
-class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Boolean, setIP: String) {
+class MFD(
+        private val version: String,
+        private val port: Int,
+        private val verbose: Boolean,
+        private var plainPassword: String,
+        private val safeMode: Boolean,
+        private val setIP: String) {
+
     private val robot: Robot = Robot()
     private val crypto: MFDCrypto = MFDCrypto()
-
-    private val version: String = ver
-    private val verbose: Boolean = verbosity
-    private var port = prt
     private val os = getOS()
 
-    private val setIP = setIP
-    private val safeMode = safeMode
 
     private var users = mutableMapOf<String, Long>()
-
-    private var plainPassword = key
 
     init {
         if (verbose) println("> OS detected as $os")
@@ -122,31 +120,28 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
     }
 
     private fun getOS(): String {
-        val os = System.getProperty("os.name").toLowerCase()
         if (verbose) println("> os.name: $os")
-        if (os.contains("win")) return "Windows"
-        if (os.contains("mac")) return "macOS"
-        if (os.contains("nix") || os.contains("nux")) return "*nix"
-        else return "unknown"
+        return when {
+            Platform.isWindows() -> "Windows"
+            Platform.isMac() -> "macOS"
+            Platform.isLinux() -> "*nix"
+            else -> "unknown"
+        }
     }
 
     fun spark() {
 
-        // The following block should catch "port in use" errors instead of just failing silently... but it doesn't. Maybe because it's spark-kotlin.
-//        initExceptionHandler{
-//            println("Error in initializing Spark - likely due to port conflict")
-//            println(it)
-//        }
-
-        val http: Http = ignite()
-
         if (verbose) println("> Setting the port")
-        http.port(port)
+        port(port)
+        initExceptionHandler{
+            println("Error in initializing Spark - likely due to port conflict")
+            println(it)
+        }
 
         if (verbose) println("> Setting static files location")
         val displayFile = File("./displays/")
         if (!displayFile.exists()) displayFile.mkdirs()
-        http.staticFiles.externalLocation("displays")
+        staticFiles.externalLocation("displays")
 
         if (verbose) print("> Checking for vJoy... ")
         var vj: VJoy? = null
@@ -157,46 +152,46 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                 dllPath = Advapi32Util.registryGetStringValue(WinReg.HKEY_LOCAL_MACHINE,
                         "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{8E31F76F-74C3-47F1-9550-E041EEDC5FBB}_is1",
                         "DllX64Location")
-                println("Found 64-bit vJoy")
+                if (verbose) println("Found 64-bit vJoy")
             } catch(e: com.sun.jna.platform.win32.Win32Exception) {
                 try {
                     dllPath = Advapi32Util.registryGetStringValue(WinReg.HKEY_LOCAL_MACHINE,
                             "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{8E31F76F-74C3-47F1-9550-E041EEDC5FBB}_is1",
                             "DllX86Location")
-                    println("Found 32-bit vJoy")
+                    if (verbose) println("Found 32-bit vJoy")
                 } catch(f: com.sun.jna.platform.win32.Win32Exception) {
-                    println("vJoy not installed properly")
+                    if (verbose) println("Not found")
                 }
             }
             if (dllPath != null) vj = VJoy("$dllPath\\$dllName")
         } else {
-            if (verbose) println("Not found - not using Windows")
+            if (verbose) println("Not found - vJoy is Windows exclusive")
         }
 
         if (verbose) println("> Creating endpoints")
 
-        http.get("/mfd") {
+        get("/mfd") { req, res ->
             val json = JSONObject()
             json.put("version", version)
             json.put("crypto", "/mfd/crypto")
             json.put("displays", "/mfd/displays")
             json.put("api", "/mfd/api")
 
-            println("${request.ip()}> Sending endpoint list")
-            status(200)
-            type("application/json")
+            println("${req.ip()}> Sending endpoint list")
+            res.status(200)
+            res.type("application/json")
             json.toString()
         }
 
-        http.get("/mfd/crypto") {
-            println("${request.ip()}> Sending crypto information")
+        get("/mfd/crypto") { req, res ->
+            println("${req.ip()}> Sending crypto information")
 
-            status(200)
-            type("application/json")
+            res.status(200)
+            res.type("application/json")
             getCrypto()
         }
 
-        http.get("/mfd/displays") {
+        get("/mfd/displays") { req, res ->
             if (verbose) println("> Getting display list")
             val directoryFiles = displayFile.listFiles(FileFilter { it.isDirectory })
             val directoryNames = directoryFiles.map{ it.name }
@@ -204,15 +199,15 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
             val jsonArr = JSONArray(directoryNames)
             json.put("displays", jsonArr)
 
-            println("${request.ip()}> Sending display list")
-            status(200)
-            type("application/json")
+            println("${req.ip()}> Sending display list")
+            res.status(200)
+            res.type("application/json")
             json.toString()
         }
 
-        http.get("/mfd/api") {
-            status(200)
-            type("text/plain")
+        get("/mfd/api") { _, res ->
+            res.status(200)
+            res.type("text/plain")
             "See documentation. The API uses HTTP POST requests."
         }
 
@@ -223,20 +218,20 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
         ///////////////////////////////////////////////////////////////////
 
         //fetch("/mfd/app", {method: "POST", body: "..."})
-        http.post("/mfd/api") {
-            if (request.body().isEmpty()) {
-                println("${request.ip()}> Request body empty")
-                status(400)
-                type("text/html")
+        post("/mfd/api") { req, res ->
+            if (req.body().isEmpty()) {
+                println("${req.ip()}> Request body empty")
+                res.status(400)
+                res.type("text/html")
                 return@post "<strong>Error 400</strong> - Body empty"
             }
 
-            val body = request.body().toString()
+            val body = req.body().toString()
             val bodyArray = body.split(":")
             val jsonObj: JSONObject
             val ivHex = bodyArray[0]
             try {
-                if (verbose) print("${request.ip()}> Checking crypto... ")
+                if (verbose) print("${req.ip()}> Checking crypto... ")
                 val iv = crypto.hexToByteArray(ivHex)
                 val cipherText = crypto.hexToByteArray(bodyArray[1])
                 val plainText = crypto.decrypt(iv, cipherText)
@@ -246,10 +241,10 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
             }
             catch (e: javax.crypto.AEADBadTagException) {
                 if (verbose) println("BAD")
-                else println("${request.ip()}> Bad or unrecognized crypto")
+                else println("${req.ip()}> Bad or unrecognized crypto")
 
-                status(401)
-                type("text/html")
+                res.status(401)
+                res.type("text/html")
                 return@post "<strong>Error 401</strong> - Bad or unrecognized crypto"
             }
 
@@ -257,9 +252,9 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
             val time: Long = java.lang.Long.parseLong(ivHex.substring(8), 16)
 
             if ( users.containsKey(user) && time < users[user] as Long ) {
-                println("${request.ip()}> Replayed or timestamp expired data")
-                status(401)
-                type("text/html")
+                println("${req.ip()}> Replayed or timestamp expired data")
+                res.status(401)
+                res.type("text/html")
                 return@post "<strong>Error 401</strong> - Timestamp expired"
             }
             else { // new user or "time" is more recent than the latest time for that user
@@ -270,7 +265,7 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
             val data = jsonObj.get("data") as String
 
             // error handling if vjoy not enabled
-            fun vjError(req: Request, res: Response): String {
+            fun vjError(): String {
                 println("${req.ip()}> vJoy not enabled")
                 res.status(501)
                 res.type("text/html")
@@ -284,13 +279,13 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                         try {
                             val key: Int = k2e(data)
                             if (safeMode && (key == KeyEvent.VK_WINDOWS || key == KeyEvent.VK_META)) {
-                                println("${request.ip()}> Blocked by SafeMode: keyon:$data")
-                                status(403)
+                                println("${req.ip()}> Blocked by SafeMode: keyon:$data")
+                                res.status(403)
                             }
                             else {
                                 robot.keyPress(key)
-                                println("${request.ip()}> keyon:$data")
-                                status(204)
+                                println("${req.ip()}> keyon:$data")
+                                res.status(204)
                             }
 
                         } catch (e: IllegalArgumentException) {
@@ -300,15 +295,15 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                     "keyoff" -> {
                         val key: Int = k2e(data)
                         robot.keyRelease(key)
-                        println("${request.ip()}> keyoff:$data")
-                        status(204)
+                        println("${req.ip()}> keyoff:$data")
+                        res.status(204)
                     }
                     "typestring" -> {
                         val keyArray = data.toCharArray()
                         for (c in keyArray) {
                             if ("!@#$%^&*()_+{}|:\"<>?~".contains(c)) {
                                 robot.keyPress(k2e("shift"))
-                                val key: Int;
+                                val key: Int
                                 when (c) {
                                     '!' -> key = k2e("1")
                                     '@' -> key = k2e("2")
@@ -345,25 +340,25 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                                 if (c.isUpperCase()) robot.keyRelease(k2e("shift"))
                             }
                         }
-                        println("${request.ip()}> typestring:$data")
-                        status(204)
+                        println("${req.ip()}> typestring:$data")
+                        res.status(204)
                     }
                     "exec" -> {
                         try {
                             if (!safeMode) {
                                 Runtime.getRuntime().exec(data)
-                                println("${request.ip()}> exec:$data")
-                                status(204)
+                                println("${req.ip()}> exec:$data")
+                                res.status(204)
                             }
                             else {
-                                println("${request.ip()}> Blocked by SafeMode: exec:$data")
-                                status(403)
+                                println("${req.ip()}> Blocked by SafeMode: exec:$data")
+                                res.status(403)
                             }
                         }
                         catch (e: java.io.IOException) {
                             println(e.message)
-                            status(400)
-                            type("text/html")
+                            res.status(400)
+                            res.type("text/html")
                             return@post "<strong>Error 400</strong> - Exec: " + e.message
                         }
                     }
@@ -372,29 +367,29 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                             try {
                                 if (!safeMode) {
                                     Desktop.getDesktop().browse(URI(data))
-                                    println("${request.ip()}> url:$data")
-                                    status(204)
+                                    println("${req.ip()}> url:$data")
+                                    res.status(204)
                                 }
                                 else {
-                                    println("${request.ip()}> Blocked by SafeMode: url:$data")
-                                    status(403)
+                                    println("${req.ip()}> Blocked by SafeMode: url:$data")
+                                    res.status(403)
                                 }
                             } catch (e: java.lang.UnsupportedOperationException) {
-                                println("${request.ip()}> Failed to visit $data. This is a known problem on Linux.")
-                                status(400)
-                                type("text/html")
+                                println("${req.ip()}> Failed to visit $data. This is a known problem on Linux.")
+                                res.status(400)
+                                res.type("text/html")
                                 return@post "<strong>Error 400</strong> - URL: " + e.message
                             } catch (e: java.io.IOException) {
-                                println("""${request.ip()}> Failed to visit $data. This could be caused by omitting "http:\\" or "https:\\" on macOS.""")
-                                status(400)
-                                type("text/html")
+                                println("""${req.ip()}> Failed to visit $data. This could be caused by omitting "http:\\" or "https:\\" on macOS.""")
+                                res.status(400)
+                                res.type("text/html")
                                 return@post "<strong>Error 400</strong> - URL: " + e.message
                             }
                         }
                         else {
-                            println("${request.ip()}> Error: 'Desktop' isn't supported in your version of Java - can't open \"$data\"")
-                            status(500)
-                            type("text/html")
+                            println("${req.ip()}> Error: 'Desktop' isn't supported in your version of Java - can't open \"$data\"")
+                            res.status(500)
+                            res.type("text/html")
                             return@post "<strong>Error 500</strong> - 'Desktop' isn't supported in your version of Java"
                         }
                     }
@@ -403,8 +398,8 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                         val x = pointList[0].toInt()
                         val y = pointList[1].toInt()
                         robot.mouseMove(x, y)
-                        println("${request.ip()}> mousemove:$x,$y")
-                        status(204)
+                        println("${req.ip()}> mousemove:$x,$y")
+                        res.status(204)
                     }
                     "mouseon" -> {
                         val button: Int
@@ -414,8 +409,8 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                             else -> button = InputEvent.BUTTON1_DOWN_MASK
                         }
                         robot.mousePress(button)
-                        println("${request.ip()}> mouseon:$data")
-                        status(204)
+                        println("${req.ip()}> mouseon:$data")
+                        res.status(204)
                     }
                     "mouseoff" -> {
                         val button: Int
@@ -426,15 +421,15 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                         }
 
                         robot.mouseRelease(button)
-                        println("${request.ip()}> mouseoff:$data")
-                        status(204)
+                        println("${req.ip()}> mouseoff:$data")
+                        res.status(204)
 
                     }
                     "mousewheel" -> {
                         val amt = data.toInt()
                         robot.mouseWheel(amt)
-                        println("${request.ip()}> mousewheel:$data")
-                        status(204)
+                        println("${req.ip()}> mousewheel:$data")
+                        res.status(204)
                     }
                     "capture" -> {
                         val dataList = data.split(',')
@@ -449,9 +444,9 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                         ImageIO.write(bufferedImage, "png", byteArrayOutputStream)
                         byteArrayOutputStream.flush()
 
-                        println("${request.ip()}> screenshot:$x,$y,$width,$height")
-                        status(200)
-                        response.type("image/png")
+                        println("${req.ip()}> screenshot:$x,$y,$width,$height")
+                        res.status(200)
+                        res.type("image/png")
                         byteArrayOutputStream.toByteArray()
                     }
                     "pixel" -> {
@@ -465,9 +460,9 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                         json.put("green", color.green)
                         json.put("blue", color.blue)
 
-                        println("${request.ip()}> pixel:$x,$y color:${color.red},${color.green},${color.blue}")
-                        status(200)
-                        type("application/json")
+                        println("${req.ip()}> pixel:$x,$y color:${color.red},${color.green},${color.blue}")
+                        res.status(200)
+                        res.type("application/json")
                         json.toString()
                     }
                     "mousepointer" -> {
@@ -476,296 +471,308 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
                         json.put("x", p.x)
                         json.put("y", p.y)
 
-                        println("${request.ip()}> mousepointer:${p.x},${p.y}")
-                        status(200)
-                        type("application/json")
+                        println("${req.ip()}> mousepointer:${p.x},${p.y}")
+                        res.status(200)
+                        res.type("application/json")
                         json.toString()
                     }
                     "test" -> {
                         val json = JSONObject()
                         json.put("test", "OK")
 
-                        status(200)
-                        type("application/json")
+                        res.status(200)
+                        res.type("application/json")
                         json.toString()
                     }
                     "changepass" -> {
                         if (!safeMode) {
                             setCrypto(data)
 
-                            println("${request.ip()}> Password change:$data")
-                            status(200)
-                            type("application/json")
+                            println("${req.ip()}> Password change:$data")
+                            res.status(200)
+                            res.type("application/json")
                             return@post getCrypto()
                         }
                         else {
-                            println("${request.ip()}> Blocked by SafeMode: Password change:$data")
-                            status(403)
+                            println("${req.ip()}> Blocked by SafeMode: Password change:$data")
+                            res.status(403)
                         }
                     }
                     "version" -> {
                         val json = JSONObject()
                         json.put("version", version)
 
-                        println("${request.ip()}> version:$version")
-                        status(200)
-                        type("application/json")
+                        println("${req.ip()}> version:$version")
+                        res.status(200)
+                        res.type("application/json")
+                        json.toString()
+                    }
+                    "focusedwindowtitle" -> {
+                        val display = getDisplay()
+                        val title = display.getTitle()
+
+                        val json = JSONObject()
+                        json.put("focusedWindowTitle", title)
+
+                        println("${req.ip()}> focusedWindowTitle:$title")
+                        res.status(200)
+                        res.type("application/json")
                         json.toString()
                     }
                     "vj_info" -> {
-                        if (vj == null) return@post vjError(request, response)
+                        if (vj == null) return@post vjError()
 
                         val json = JSONObject()
-                        json.put("enabled", vj?.vJoyEnabled())
-                        json.put("manufacturer", vj?.getvJoyManufacturerString())
-                        json.put("product", vj?.getvJoyProductString())
-                        json.put("serialnumber", vj?.getvJoySerialNumberString())
-                        json.put("version", vj?.getvJoyVersion())
-                        json.put("maxDevices", vj?.getvJoyMaxDevices())
-                        json.put("existingDevices", vj?.getNumberExistingVJD())
+                        json.put("enabled", vj!!.vJoyEnabled())
+                        json.put("manufacturer", vj!!.getvJoyManufacturerString())
+                        json.put("product", vj!!.getvJoyProductString())
+                        json.put("serialnumber", vj!!.getvJoySerialNumberString())
+                        json.put("version", vj!!.getvJoyVersion())
+                        json.put("maxDevices", vj!!.getvJoyMaxDevices())
+                        json.put("existingDevices", vj!!.getNumberExistingVJD())
 
-                        println("${request.ip()}> vj_manufacturer")
-                        status(200)
-                        type("application/json")
+                        println("${req.ip()}> vj_manufacturer")
+                        res.status(200)
+                        res.type("application/json")
                         json.toString()
                     }
 //                    "vj_" -> {
 //                        if (vj == null) return@post vjError(request, response)
 //
-//                        println("${request.ip()}> vj_")
+//                        println("${req.ip()}> vj_")
 //                        status(204)
 //                    }
                     "vj_vjd_info" -> {
-                        if (vj == null) return@post vjError(request, response)
+                        if (vj == null) return@post vjError()
 
                         val rID = data.toInt()
                         if (!vj!!.isVJDExists(rID)) {
-                            println("${request.ip()}> requested non-existent VJD: $rID")
-                            status(404)
-                            type("text/html")
+                            println("${req.ip()}> requested non-existent VJD: $rID")
+                            res.status(404)
+                            res.type("text/html")
                             return@post "<strong>Error 404</strong> Requested VJD does not exist"
                         }
 
                         val json = JSONObject()
-                        json.put("status", vj?.getVJDStatus(rID))
-                        json.put("btnNumber", vj?.getVJDButtonNumber(rID))
-                        json.put("discPovNumber", vj?.getVJDDiscPovNumber(rID))
-                        json.put("contPovNumber", vj?.getVJDContPovNumber(rID))
-                        json.put("ownerPid", vj?.getOwnerPid(rID))
+                        json.put("status", vj!!.getVJDStatus(rID))
+                        json.put("btnNumber", vj!!.getVJDButtonNumber(rID))
+                        json.put("discPovNumber", vj!!.getVJDDiscPovNumber(rID))
+                        json.put("contPovNumber", vj!!.getVJDContPovNumber(rID))
+                        json.put("ownerPid", vj!!.getOwnerPid(rID))
                         arrayOf("x", "y", "z", "rx", "ry", "rz", "sl0", "sl1", "whl", "pov").forEach{
                             if (vj!!.getVJDAxisExist(rID, it)) {
-                                val max = vj?.getVJDAxisMax(rID, it)
+                                val max = vj!!.getVJDAxisMax(rID, it)
                                 json.put("${it}_max", max)
                             }
                         }
 
-                        println("${request.ip()}> vj_vjd_info: $rID")
-                        status(200)
-                        type("application/json")
+                        println("${req.ip()}> vj_vjd_info: $rID")
+                        res.status(200)
+                        res.type("application/json")
                         json.toString()
                     }
                     "vj_vjd_acquire" -> {
-                        if (vj == null) return@post vjError(request, response)
+                        if (vj == null) return@post vjError()
 
                         val rID = data.toInt()
                         if (!vj!!.isVJDExists(rID)) {
-                            println("${request.ip()}> requested non-existent vjd: $rID")
-                            status(404)
-                            type("text/html")
+                            println("${req.ip()}> requested non-existent vjd: $rID")
+                            res.status(404)
+                            res.type("text/html")
                             return@post "<strong>Error 404</strong> Requested VJD does not exist"
                         }
 
-                        val status = vj?.getVJDStatus(rID)
+                        val status = vj!!.getVJDStatus(rID)
                         if (status == "VJD_STAT_OWN" || status == "VJD_STAT_FREE") {
                             if (vj!!.acquireVJD(rID)) {
-                                println("${request.ip()}> vj_vjd_acquire: $rID")
-                                status(204)
+                                println("${req.ip()}> vj_vjd_acquire: $rID")
+                                res.status(204)
                             } else {
-                                println("${request.ip()}> failed to acquire VJD: $rID")
-                                status(500)
-                                type("text/html")
+                                println("${req.ip()}> failed to acquire VJD: $rID")
+                                res.status(500)
+                                res.type("text/html")
                                 return@post "<strong>Error 500</strong> Failed to acquire VJD"
                             }
                         } else {
-                            println("${request.ip()}> requested unavailable VJD: $rID")
-                            status(500)
-                            type("text/html")
+                            println("${req.ip()}> requested unavailable VJD: $rID")
+                            res.status(500)
+                            res.type("text/html")
                             return@post "<strong>Error 500</strong> Requested unavailable VJD"
                         }
                     }
                     "vj_vjd_relinquish" -> {
-                        if (vj == null) return@post vjError(request, response)
+                        if (vj == null) return@post vjError()
 
                         val rID = data.toInt()
-                        vj?.relinquishVJD(rID)
+                        vj!!.relinquishVJD(rID)
 
-                        println("${request.ip()}> vj_vjd_relinquish: $rID")
-                        status(204)
+                        println("${req.ip()}> vj_vjd_relinquish: $rID")
+                        res.status(204)
                     }
                     "vj_vjd_setaxis" -> {
-                        if (vj == null) return@post vjError(request, response)
+                        if (vj == null) return@post vjError()
 
                         val params = data.split(',')
                         val rID = params[0].toInt()
                         val axis = params[1]
                         val value = params[2].toLong()
 
-                        val status = vj?.getVJDStatus(rID)
+                        val status = vj!!.getVJDStatus(rID)
                         if (status == "VJD_STAT_OWN") {
                             if (vj!!.setAxis(value, rID, axis)) {
-                                println("${request.ip()}> vj_vjd_setaxis: $rID, $axis, $value")
-                                status(204)
+                                println("${req.ip()}> vj_vjd_setaxis: $rID, $axis, $value")
+                                res.status(204)
                             } else {
-                                println("${request.ip()}> failed to set axis: $rID, $axis, $value")
-                                status(500)
-                                type("text/html")
+                                println("${req.ip()}> failed to set axis: $rID, $axis, $value")
+                                res.status(500)
+                                res.type("text/html")
                                 return@post "<strong>Error 500</strong> Failed to set axis"
                             }
                         } else {
-                            println("${request.ip()}> requested unavailable VJD: $rID")
-                            status(500)
-                            type("text/html")
+                            println("${req.ip()}> requested unavailable VJD: $rID")
+                            res.status(500)
+                            res.type("text/html")
                             return@post "<strong>Error 500</strong> Requested unavailable VJD"
                         }
                     }
                     "vj_vjd_setbtn" -> {
-                        if (vj == null) return@post vjError(request, response)
+                        if (vj == null) return@post vjError()
 
                         val params = data.split(',')
                         val rID = params[0].toInt()
                         val btn = params[1].toShort()
                         val value = params[2].toBoolean()
 
-                        val status = vj?.getVJDStatus(rID)
+                        val status = vj!!.getVJDStatus(rID)
                         if (status == "VJD_STAT_OWN") {
                             if (vj!!.setBtn(value, rID, btn)) {
-                                println("${request.ip()}> vj_vjd_setbtn: $rID, $btn, $value")
-                                status(204)
+                                println("${req.ip()}> vj_vjd_setbtn: $rID, $btn, $value")
+                                res.status(204)
                             } else {
-                                println("${request.ip()}> failed to set btn: $rID, $btn, $value")
-                                status(500)
-                                type("text/html")
+                                println("${req.ip()}> failed to set btn: $rID, $btn, $value")
+                                res.status(500)
+                                res.type("text/html")
                                 return@post "<strong>Error 500</strong> Failed to set btn"
                             }
                         } else {
-                            println("${request.ip()}> requested unavailable VJD: $rID")
-                            status(500)
-                            type("text/html")
+                            println("${req.ip()}> requested unavailable VJD: $rID")
+                            res.status(500)
+                            res.type("text/html")
                             return@post "<strong>Error 500</strong> Requested unavailable VJD"
                         }
                     }
                     "vj_vjd_setdiscpov" -> {
-                        if (vj == null) return@post vjError(request, response)
+                        if (vj == null) return@post vjError()
 
                         val params = data.split(',')
                         val rID = params[0].toInt()
                         val nPov = params[1].toShort()
                         val value = params[2].toInt()
 
-                        val status = vj?.getVJDStatus(rID)
+                        val status = vj!!.getVJDStatus(rID)
                         if (status == "VJD_STAT_OWN") {
                             if (vj!!.setDiscPov(value, rID, nPov)) {
-                                println("${request.ip()}> vj_vjd_setdiscpov: $rID, $nPov, $value")
-                                status(204)
+                                println("${req.ip()}> vj_vjd_setdiscpov: $rID, $nPov, $value")
+                                res.status(204)
                             } else {
-                                println("${request.ip()}> failed to set discrete pov: $rID, $nPov, $value")
-                                status(500)
-                                type("text/html")
+                                println("${req.ip()}> failed to set discrete pov: $rID, $nPov, $value")
+                                res.status(500)
+                                res.type("text/html")
                                 return@post "<strong>Error 500</strong> Failed to set discrete pov"
                             }
                         } else {
-                            println("${request.ip()}> requested unavailable VJD: $rID")
-                            status(500)
-                            type("text/html")
+                            println("${req.ip()}> requested unavailable VJD: $rID")
+                            res.status(500)
+                            res.type("text/html")
                             return@post "<strong>Error 500</strong> Requested unavailable VJD"
                         }
                     }
                     "vj_vjd_setcontpov" -> {
-                        if (vj == null) return@post vjError(request, response)
+                        if (vj == null) return@post vjError()
 
                         val params = data.split(',')
                         val rID = params[0].toInt()
                         val nPov = params[1].toShort()
                         val value = params[2].toInt()
 
-                        val status = vj?.getVJDStatus(rID)
+                        val status = vj!!.getVJDStatus(rID)
                         if (status == "VJD_STAT_OWN") {
                             if (vj!!.setContPov(value, rID, nPov)) {
-                                println("${request.ip()}> vj_vjd_setcontpov: $rID, $nPov, $value")
-                                status(204)
+                                println("${req.ip()}> vj_vjd_setcontpov: $rID, $nPov, $value")
+                                res.status(204)
                             } else {
-                                println("${request.ip()}> failed to set continuous pov: $rID, $nPov, $value")
-                                status(500)
-                                type("text/html")
+                                println("${req.ip()}> failed to set continuous pov: $rID, $nPov, $value")
+                                res.status(500)
+                                res.type("text/html")
                                 return@post "<strong>Error 500</strong> Failed to set continuous pov"
                             }
                         } else {
-                            println("${request.ip()}> requested unavailable VJD: $rID")
-                            status(500)
-                            type("text/html")
+                            println("${req.ip()}> requested unavailable VJD: $rID")
+                            res.status(500)
+                            res.type("text/html")
                             return@post "<strong>Error 500</strong> Requested unavailable VJD"
                         }
                     }
                     "vj_vjd_reset" -> {
-                        if (vj == null) return@post vjError(request, response)
+                        if (vj == null) return@post vjError()
 
                         val rID = data.toInt()
                         if (vj!!.resetVJD(rID)) {
-                            println("${request.ip()}> vj_vjd_relinquish: $rID")
-                            status(204)
+                            println("${req.ip()}> vj_vjd_relinquish: $rID")
+                            res.status(204)
                         } else {
-                            println("${request.ip()}> failed to reset VJD: $rID")
-                            status(500)
-                            type("text/html")
+                            println("${req.ip()}> failed to reset VJD: $rID")
+                            res.status(500)
+                            res.type("text/html")
                             return@post "<strong>Error 500</strong> Failed to reset VJD"
                         }
                     }
                     "vj_vjd_resetbtns" -> {
-                        if (vj == null) return@post vjError(request, response)
+                        if (vj == null) return@post vjError()
 
                         val rID = data.toInt()
                         if (vj!!.resetButtons(rID)) {
-                            println("${request.ip()}> vj_vjd_resetbtns: $rID")
-                            status(204)
+                            println("${req.ip()}> vj_vjd_resetbtns: $rID")
+                            res.status(204)
                         } else {
-                            println("${request.ip()}> failed to reset VJD buttons: $rID")
-                            status(500)
-                            type("text/html")
+                            println("${req.ip()}> failed to reset VJD buttons: $rID")
+                            res.status(500)
+                            res.type("text/html")
                             return@post "<strong>Error 500</strong> Failed to reset VJD buttons"
                         }
                     }
                     "vj_vjd_resetpovs" -> {
-                        if (vj == null) return@post vjError(request, response)
+                        if (vj == null) return@post vjError()
 
                         val rID = data.toInt()
                         if (vj!!.resetPovs(rID)) {
-                            println("${request.ip()}> vj_vjd_resetpovs: $rID")
-                            status(204)
+                            println("${req.ip()}> vj_vjd_resetpovs: $rID")
+                            res.status(204)
                         } else {
-                            println("${request.ip()}> failed to reset VJD povs: $rID")
-                            status(500)
-                            type("text/html")
+                            println("${req.ip()}> failed to reset VJD povs: $rID")
+                            res.status(500)
+                            res.type("text/html")
                             return@post "<strong>Error 500</strong> Failed to reset VJD"
                         }
                     }
                     "vj_resetall" -> {
-                        if (vj == null) return@post vjError(request, response)
+                        if (vj == null) return@post vjError()
 
-                        vj?.resetAll()
-                        println("${request.ip()}> vj_resetall")
-                        status(204)
+                        vj!!.resetAll()
+                        println("${req.ip()}> vj_resetall")
+                        res.status(204)
                     }
                     else -> {
-                        println("${request.ip()}> Endpoint not found")
-                        status(404)
-                        type("text/html")
+                        println("${req.ip()}> Endpoint not found")
+                        res.status(404)
+                        res.type("text/html")
                         "<strong>Error 404</strong> - Endpoint not found"
                     }
                 } // close when
             } catch (e: IllegalArgumentException) {
                 println(e.printStackTrace())
-                status(400)
-                type("text/html")
+                res.status(400)
+                res.type("text/html")
                 return@post "<strong>Error 400</strong> - Bad request"
             }
         }
@@ -790,7 +797,7 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
         }
 
         if (verbose) println("> Creating popup menu")
-        // Creating the vals we need
+        // Creating the values we need
         val popup = PopupMenu()
         val trayIcon = TrayIcon(icon, "MFD $version")
         val tray = SystemTray.getSystemTray()
@@ -812,7 +819,7 @@ class MFD(ver: String, prt: Int, verbosity: Boolean, key: String, safeMode: Bool
         popup.add(exitItem)
 
         trayIcon.setPopupMenu(popup)
-        trayIcon.setImageAutoSize(true);
+        trayIcon.setImageAutoSize(true)
         try {
             tray.add(trayIcon)
         } catch (e: AWTException) {

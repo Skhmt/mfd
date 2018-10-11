@@ -4,7 +4,7 @@ import com.sun.jna.ptr.*
 import com.sun.jna.platform.win32.*
 
 class VJoy(path: String) {
-    private val vj = Native.loadLibrary(path, vjdll::class.java)
+    private var vj: vjdll = Native.loadLibrary(path, vjdll::class.java)
 
     fun axisEnum(axis: String): Int {
         val lowerAxis = axis.toLowerCase()
@@ -239,7 +239,7 @@ class VJoy(path: String) {
 fun main (args: Array<String>) {
     val dllName = "vJoyInterface.dll"
     var dllPath: String
-    var vj: VJoy
+    val vj: VJoy
     try {
         dllPath = Advapi32Util.registryGetStringValue(WinReg.HKEY_LOCAL_MACHINE,
                 "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{8E31F76F-74C3-47F1-9550-E041EEDC5FBB}_is1",

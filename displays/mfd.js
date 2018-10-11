@@ -318,6 +318,15 @@ let mfd = (function () {
 	};
 	m.gS = m.getScreenshot;
 
+	m.getWindowTitle = function (fn) {
+		queue({
+			action: 'focusedwindowtitle',
+			callback: json => {
+				if (typeof fn === 'function') fn(json.focusedWindowTitle);
+			}
+		});
+	};
+
     // vJoy api, mfd.vj.[...]()
 
     m.vJoy = {};

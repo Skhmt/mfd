@@ -62,7 +62,7 @@
                     Calculator (win)
                 </span>
             </div>
-            <div style="background-color: #bdc3c7;" onclick="vib();mfd.getScreenshot(0,0,2560,1440, url => document.getElementById('mainframe').src = url)">
+            <div style="background-color: #bdc3c7;" onclick="vib();mfd.getScreenshot(0,0,2560,1440, url => document.getElementById('main').innerHTML = `<img src='${url}' style='width: 100%; height: 100%;'>`)">
                 <span>
                     <i class="fas fa-desktop fa-lg"></i><br>
                     Main Screen: Desktop image
@@ -75,17 +75,17 @@
                     Notepad (win)
                 </span>
             </div>
-            <div style="background-color: #bdc3c7;" onclick="vib();document.getElementById('mainframe').src = 'https://www.youtube.com/embed/ZzQ3eBerHfM';">
+            <div style="background-color: #bdc3c7;" onclick="vib();document.getElementById('main').innerHTML = `<iframe width='100%' height='100%'' src='https://www.youtube-nocookie.com/embed/ZtdZs2zy5T8?rel=0' frameborder='0' allow='autoplay; encrypted-media' allowfullscreen></iframe>`;">
                 <span>
                     <i class="fas fa-fighter-jet fa-lg"></i><br>
                     Main Screen: Danger Zone
                 </span>
             </div>
 
-            <div style="background-color: #bdc3c7;" onclick="vib();mfd.exec('mspaint');">
+            <div style="background-color: #bdc3c7;" onclick="vib();mfd.getWindowTitle(title => alert(`Focused Window Title: ${title}`));">
                 <span>
                     <i class="fas fa-paint-brush fa-lg"></i><br>
-                    MSPaint (win)
+                    Get Focused Window Name
                 </span>
             </div>
             <div style="background-color: #bdc3c7;" onclick="vib();mfd.ping(ping => alert(`Ping: ${ping}ms`))">
@@ -140,10 +140,7 @@
 			
 			<!-- Main screen -->
 			<div id="main" style="background-color: #e74c3c;">
-                <iframe src="https://www.youtube.com/embed/ZzQ3eBerHfM"
-                    id="mainframe"
-                    style="height: 100%; width: 100%; border: 0">
-                </iframe>
+                <iframe width="100%" height="100%" src="https://www.youtube-nocookie.com/embed/ZtdZs2zy5T8?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
 
 <!-- Modifying anything BELOW this line isn't recommended unless you have HTML/CSS/JS experience -->

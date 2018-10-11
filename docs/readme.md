@@ -120,13 +120,18 @@ It can also be used for desktop macros, or pretty much anything really.
 
 # Changelog
 
+* 1.5.0 - 10Oct18
+  * Added an api for getting the focused window's title (`mfd.getWindowTitle(title => {console.log(title);})`)
+  * Transitioned from `spark-kotlin 1.0.0-alpha` to `spark-core 2.8.0` for security reasons
+  * [Bugfix] Fixed the youtube example in the `Example` display
+  * [Bugfix] vJoy status was displaying even when not in verbose mode
 * 1.4.0 - 3Sep18
   * Added the escape key (`esc`) to the API
   * Updated included displays
   * Added github repository link to the taskbar menu
   * Cleaned up some dependencies
-  * Fixed a bug with blank passwords, they should work better now (but still aren't recommended for security reasons)
   * Slightly modified the main page
+  * [Bugfix] blank passwords should work better now (but still aren't recommended for security reasons)
 * 1.3.0 - 17Feb18
   * Added support for the macOS ⌘ key
   * Added the `-ip [ip address]` command line switch to force the config page to use your supplied ip address so the QR code works with multiple-NIC systems - this doesn't change how the program works at all

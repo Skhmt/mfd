@@ -6,7 +6,7 @@ MFD lets you control your computer via your tablet, phone, or another computer w
 
 Alternatively, it's like an external controller for AutoHotkey.
 
-Similar products include Elgato's Stream Deck, ROCCAT's Power-Grid (rest in peace), Desrat's TouchDown, and LEA Extended Input.
+Similar products include Elgato's Stream Deck, ROCCAT's Power-Grid, Desrat's TouchDown, and LEA Extended Input.
 
 
 |                       | MFD | [Stream Deck](https://www.elgato.com/en/gaming/stream-deck) | [Power-Grid](https://en.roccat.org/Software/Power-Grid/Download) | [TouchDown](http://www.desratsworld.co.uk/TouchDown/) | [LEI](https://www.leaextendedinput.com/) | [Deckboard](https://deckboard.app/) |

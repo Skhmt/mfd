@@ -6,21 +6,21 @@ MFD lets you control your computer via your tablet, phone, or another computer w
 
 Alternatively, it's like an external controller for AutoHotkey.
 
-Similar products include Elgato's Stream Deck, ROCCAT's Power-Grid, Desrat's TouchDown, and LEA Extended Input.
+Similar products include Elgato's Stream Deck, ROCCAT's Power-Grid (rest in peace), Desrat's TouchDown, and LEA Extended Input.
 
 
-|                       | MFD | Stream Deck | Power-Grid | TouchDown | LEI |
-|-----------------------|-----|-------------|------------|-----------|-----|
-| Windows Host          |  ✔  |      ✔     |      ✔    |     ✔     |  ✔  |
-| MacOS Host            |  ✔  |      ✔     |            |           |     |
-| Linux Host            |  ✔  |             |            |           |     |
-| Android Client        |  ✔  |             |      ✔     |     ✔    |  ✔  |
-| iOS Client            |  ✔  |             |      ✔     |     ✔    |  ✔  |
-| PC Client             |  ✔  |             |            |     ✔     |     |
-| Proprietary Client    |      |      ✔     |            |           |     |
-| Custom Display Layout |  ✔  |             |      ✔     |     ✔    |  ✔  |
-| Completely Free       |  ✔  |             |            |     ✔     | Ads |
-| More than one Client  |  ✔  |             |            |     ✔     |     |
+|                       | MFD | Stream Deck | Power-Grid | TouchDown | LEI | Deckboard |
+|-----------------------|-----|-------------|------------|-----------|-----|-----------|
+| Windows Host          |  ✔  |      ✔      |      ✔    |     ✔     |  ✔  | ✔ |
+| MacOS Host            |  ✔  |      ✔      |           |           |     | |
+| Linux Host            |  ✔  |             |            |           |     | |
+| Android Client        |  ✔  |             |     ✔     |     ✔    |  ✔  | ✔ |
+| iOS Client            |  ✔  |             |     ✔     |     ✔    |  ✔  | |
+| PC Client             |  ✔  |             |            |     ✔     |     | |
+| Proprietary Client    |     |       ✔     |            |           |     | |
+| Custom Display Layout |  ✔  |             |      ✔     |     ✔    |  ✔  | ✔ |
+| Completely Free       |  ✔  |             |            |     ✔     | Ads | Ads |
+| More than one Client  |  ✔  |             |            |     ✔     |     | ? |
 
 ## Ok, but what is an MFD?
 Multi-Function Display. [Aircraft use them](https://i.imgur.com/F3zrq6g.jpg) and have been transitioning away from traditional knobs, switches, and gauges and towards more and larger MFDs. 

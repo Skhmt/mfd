@@ -9,11 +9,7 @@
 import com.sun.jna.Platform
 import com.sun.jna.platform.win32.Advapi32Util
 import com.sun.jna.platform.win32.WinReg
-import javafx.application.Application
-import javafx.embed.swing.JFXPanel
-import javafx.scene.media.Media
-import javafx.scene.media.MediaException
-import javafx.scene.media.MediaPlayer
+import javazoom.jl.player.Player
 import org.json.JSONArray
 import java.awt.*
 import java.awt.event.InputEvent
@@ -27,7 +23,6 @@ import org.json.JSONObject
 import java.awt.event.KeyEvent
 import java.io.FileFilter
 import spark.Spark.*
-import javafx.stage.Stage
 
 
 fun main(args: Array<String>) {
@@ -67,8 +62,6 @@ fun main(args: Array<String>) {
     if (verbose) println("> Creating spark server")
     mfd.spark()
     if (verbose) println("> --- MFD initialized")
-
-    JFXPanel() // initialize JavaFX toolkit for playing mp3s later
 }
 
 class MFD(
@@ -83,7 +76,7 @@ class MFD(
     private val crypto: MFDCrypto = MFDCrypto()
     private val os = getOS()
 
-    private lateinit var mediaPlayer: MediaPlayer // so the MediaPlayer doesn't get GC'd and stop after 5 seconds of playing
+    private lateinit var mediaPlayer: Player // so the Player doesn't get GC'd and stop after 5 seconds of playing
 
     private var users = mutableMapOf<String, Long>()
 
@@ -528,28 +521,23 @@ class MFD(
                     }
                     "playmp3" -> {
                         try {
-                            mediaPlayer.stop()
+                            mediaPlayer.close()
                         } catch (e: Exception) {
                         }
 
-                        try {
-                            val fileURI = File(data).toURI()
-                            val mp3Media = Media(fileURI.toString())
-                            mediaPlayer = MediaPlayer(mp3Media)
+                        Thread{
+                            val fileStream = File(data).inputStream()
+                            mediaPlayer = Player(fileStream)
                             mediaPlayer.play()
+                        }.start()
 
-                            println("${req.ip()}> playmp3:$data")
-                            res.status(204)
-                        } catch (e: MediaException) {
-                            println("${req.ip()}> Requested unavailable mp3:$data")
-                            res.status(400)
-                            return@post "<strong>Error 400</strong> Could not find media file"
-                        }
+                        println("${req.ip()}> playmp3:$data")
+                        res.status(204)
 
                     }
                     "stopmp3" -> {
                         try {
-                            mediaPlayer.stop()
+                            mediaPlayer.close()
                         } catch (e: Exception) {
                         }
                         println("${req.ip()}> stopmp3")

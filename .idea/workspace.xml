@@ -6,9 +6,12 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cb83e9a3-806a-4bee-82c4-7231602f2d5e" name="Default" comment="Added Deckboard to the comparison">
-      <change beforePath="$PROJECT_DIR$/docs/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/readme.md" afterDir="false" />
+    <list default="true" id="cb83e9a3-806a-4bee-82c4-7231602f2d5e" name="Default" comment="fixed typo">
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/MFD_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MFD-kt.iml" beforeDir="false" afterPath="$PROJECT_DIR$/MFD-kt.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MFD.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/MFD.kt" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/.idea/" />
@@ -25,13 +28,13 @@
     <session id="1482517093">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="5" />
+          <entry key="project.closed" value="6" />
           <entry key="project.open.time.0" value="2" />
           <entry key="project.open.time.1" value="1" />
-          <entry key="project.open.time.4" value="1" />
+          <entry key="project.open.time.4" value="2" />
           <entry key="project.open.time.5" value="1" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="6" />
+          <entry key="project.opened" value="7" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -39,7 +42,7 @@
           <entry key="gitignore" value="5" />
           <entry key="html" value="1" />
           <entry key="js" value="1" />
-          <entry key="kt" value="4" />
+          <entry key="kt" value="6" />
           <entry key="md" value="7" />
           <entry key="xml" value="1" />
         </counts>
@@ -48,7 +51,7 @@
         <counts>
           <entry key="HTML" value="1" />
           <entry key="JavaScript" value="1" />
-          <entry key="Kotlin" value="4" />
+          <entry key="Kotlin" value="6" />
           <entry key="Markdown" value="7" />
           <entry key="PLAIN_TEXT" value="5" />
           <entry key="XML" value="1" />
@@ -58,17 +61,17 @@
         <counts>
           <entry key="gitignore" value="83" />
           <entry key="js" value="400" />
-          <entry key="kt" value="3085" />
-          <entry key="md" value="1769" />
-          <entry key="txt" value="131" />
+          <entry key="kt" value="3325" />
+          <entry key="md" value="1777" />
+          <entry key="txt" value="166" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="JavaScript" value="400" />
-          <entry key="Kotlin" value="3085" />
-          <entry key="Markdown" value="1769" />
-          <entry key="PLAIN_TEXT" value="214" />
+          <entry key="Kotlin" value="3325" />
+          <entry key="Markdown" value="1777" />
+          <entry key="PLAIN_TEXT" value="249" />
         </counts>
       </usages-collector>
     </session>
@@ -76,13 +79,13 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/docs/readme.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="220">
-                <caret line="11" column="112" selection-start-line="11" selection-start-column="112" selection-end-line="11" selection-end-column="112" />
-              </first_editor>
-              <second_editor />
+        <entry file="file://$PROJECT_DIR$/src/MFD.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="554">
+              <caret line="532" column="24" selection-start-line="532" selection-start-column="24" selection-end-line="532" selection-end-column="24" />
+              <folding>
+                <element signature="e#138#816#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -142,16 +145,17 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/displays/mfd.js" />
         <option value="$PROJECT_DIR$/docs/api.md" />
-        <option value="$PROJECT_DIR$/src/MFD.kt" />
         <option value="$PROJECT_DIR$/docs/readme.md" />
+        <option value="$PROJECT_DIR$/src/test.kt" />
+        <option value="$PROJECT_DIR$/src/MFD.kt" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="266" />
-    <option name="y" value="95" />
-    <option name="width" value="2265" />
-    <option name="height" value="1273" />
+    <option name="x" value="875" />
+    <option name="y" value="84" />
+    <option name="width" value="1590" />
+    <option name="height" value="1151" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -160,17 +164,13 @@
     </navigator>
     <panes>
       <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="mfd" type="b2602c69:ProjectViewProjectNode" />
               <item name="mfd" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="mfd" type="b2602c69:ProjectViewProjectNode" />
-              <item name="mfd" type="462c0819:PsiDirectoryNode" />
-              <item name="docs" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="mfd" type="b2602c69:ProjectViewProjectNode" />
@@ -196,14 +196,13 @@
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="Downloaded.Files.Path.Enabled" value="true" />
     <property name="Repository.Attach.JavaDocs" value="false" />
     <property name="Repository.Attach.Sources" value="false" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1545021054568" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1545064767443" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
@@ -235,7 +234,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Kotlin.MFDKt">
+  <component name="RunManager" selected="Kotlin.TestKt">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
       <method v="2">
@@ -250,19 +249,6 @@
     </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MFDCryptoKt" type="JetRunConfigurationType" factoryName="Kotlin" temporary="true" nameIsGenerated="true">
-      <module name="MFD-kt" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="MAIN_CLASS_NAME" value="MFDCryptoKt" />
-      <option name="WORKING_DIRECTORY" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -288,6 +274,19 @@
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PASS_PARENT_ENVS" value="true" />
       <option name="MAIN_CLASS_NAME" value="MFDtestKt" />
+      <option name="WORKING_DIRECTORY" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestKt" type="JetRunConfigurationType" factoryName="Kotlin" temporary="true" nameIsGenerated="true">
+      <module name="MFD-kt" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" value="TestKt" />
       <option name="WORKING_DIRECTORY" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -338,18 +337,18 @@
     </configuration>
     <list>
       <item itemvalue="Kotlin.MFDKt" />
-      <item itemvalue="Kotlin.MFDCryptoKt" />
       <item itemvalue="Kotlin.MFDtestKt" />
       <item itemvalue="Kotlin.VjoyTestKt" />
       <item itemvalue="Kotlin.VJoyKt" />
+      <item itemvalue="Kotlin.TestKt" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Kotlin.TestKt" />
         <item itemvalue="Kotlin.MFDKt" />
         <item itemvalue="Kotlin.VJoyKt" />
         <item itemvalue="Kotlin.VjoyTestKt" />
         <item itemvalue="Kotlin.MFDtestKt" />
-        <item itemvalue="Kotlin.MFDCryptoKt" />
       </list>
     </recent_temporary>
   </component>
@@ -420,7 +419,21 @@
       <option name="project" value="LOCAL" />
       <updated>1545023609964</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Added links to the readme">
+      <created>1545023755642</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1545023755642</updated>
+    </task>
+    <task id="LOCAL-00010" summary="fixed typo">
+      <created>1545023812030</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1545023812030</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TodoView" selected-index="2">
@@ -433,10 +446,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="266" y="95" width="2265" height="1273" extended-state="0" />
+    <frame x="875" y="84" width="1590" height="1151" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1478458" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21503268" />
       <window_info id="Structure" order="1" weight="0.24985963" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -446,19 +459,19 @@
       <window_info id="Capture Tool" order="7" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32981783" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.17333333" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.17248255" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.20266667" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.3288889" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32830188" />
       <window_info anchor="bottom" id="DB Execution Console" order="7" />
       <window_info anchor="bottom" id="SFDX" order="8" />
-      <window_info anchor="bottom" id="Terminal" order="9" weight="0.3288889" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.32830188" />
       <window_info anchor="bottom" id="Log Manager" order="10" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" weight="0.32976282" />
-      <window_info anchor="bottom" id="Messages" order="12" weight="0.3608889" />
+      <window_info anchor="bottom" id="Messages" order="12" weight="0.28514457" />
       <window_info anchor="bottom" id="Debug Logs" order="13" />
-      <window_info anchor="bottom" id="Version Control" order="14" weight="0.3288889" />
+      <window_info anchor="bottom" id="Version Control" order="14" weight="0.4163522" />
       <window_info anchor="bottom" id="Salesforce" order="15" />
       <window_info anchor="bottom" id="Execute Anonymous" order="16" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -514,7 +527,9 @@
     <MESSAGE value="updated readme" />
     <MESSAGE value="minor fixes" />
     <MESSAGE value="Added Deckboard to the comparison" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Deckboard to the comparison" />
+    <MESSAGE value="Added links to the readme" />
+    <MESSAGE value="fixed typo" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed typo" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -647,20 +662,33 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/MFD.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="70" column="66" selection-start-line="70" selection-start-column="66" selection-end-line="70" selection-end-column="66" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/docs/readme.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="220">
-            <caret line="11" column="112" selection-start-line="11" selection-start-column="112" selection-end-line="11" selection-end-column="112" />
+          <first_editor relative-caret-position="160">
+            <caret line="8" column="66" selection-start-line="8" selection-start-column="66" selection-end-line="8" selection-end-column="66" />
           </first_editor>
           <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="4" column="4" selection-start-line="4" selection-start-column="4" selection-end-line="5" selection-end-column="17" />
+          <folding>
+            <element signature="e#0#52#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/MFD.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="554">
+          <caret line="532" column="24" selection-start-line="532" selection-start-column="24" selection-end-line="532" selection-end-column="24" />
+          <folding>
+            <element signature="e#138#816#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -670,7 +698,7 @@
       <state key="ArtifactsStructureConfigurable.UI">
         <settings>
           <artifact-editor />
-          <last-edited>MFD:jar</last-edited>
+          <last-edited>MFD-kt:jar</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -743,7 +771,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>com.sparkjava:spark-core:2.8.0</last-edited>
+          <last-edited>com.googlecode.soundlibs:jlayer:1.0.1-1</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

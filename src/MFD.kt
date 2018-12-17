@@ -27,7 +27,7 @@ import spark.Spark.*
 
 fun main(args: Array<String>) {
 
-    val version = "1.6.0"
+    val version = "1.6.1"
 
     var port = 80
     var verbose = false

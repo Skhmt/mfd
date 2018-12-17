@@ -63,7 +63,7 @@ It can also be used for desktop macros, or pretty much anything really.
 * Start using it!
 
 ## Random Notes
-* MFD is written in Kotlin and javascript, and uses additional code from [SparkJava](http://sparkjava.com/), [JSON-java](https://github.com/stleary/JSON-java), [asmcrypto.js](https://github.com/vibornoff/asmcrypto.js), [NoSleep.js](https://github.com/richtr/NoSleep.js), [QRCode.js](https://github.com/davidshimjs/qrcodejs), and [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart). MFD also uses [FontAwesome](https://fontawesome.com/) icons in the Example Display
+* MFD is written in Kotlin and javascript, and uses additional code from [SparkJava](http://sparkjava.com/), [JSON-java](https://github.com/stleary/JSON-java), [JLayer](http://www.javazoom.net/javalayer/sources.html), [asmcrypto.js](https://github.com/vibornoff/asmcrypto.js), [NoSleep.js](https://github.com/richtr/NoSleep.js), [QRCode.js](https://github.com/davidshimjs/qrcodejs), and [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart). MFD also uses [FontAwesome](https://fontawesome.com/) icons in the Example Display
 * With minimal HTML, CSS, and Javascript knowledge, making your own displays is easy, as displays are simply websites
   * Place displays in their own folder in the `/displays/` directory, see the `Example` display and its folder
 * If you need help, try asking at the official [/r/mfd subreddit](https://www.reddit.com/r/mfd/)
@@ -122,6 +122,9 @@ It can also be used for desktop macros, or pretty much anything really.
 
 # Changelog
 
+* 1.6.1 - 17Dec18
+  * *If 1.6.0 is working for you, there's no need to update*
+  * Changed from JavaFX to JLayer for playing mp3s
 * 1.6.0 - 16Dec18
   * Added an API to play and stop an mp3 on the host computer, `mfd.playMP3(_path_)` and `mfd.stopMP3()`
   * Updated some dependencies

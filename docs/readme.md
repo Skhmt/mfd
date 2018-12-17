@@ -38,11 +38,12 @@ It can also be used for desktop macros, or pretty much anything really.
 
 ## Installation
 * Download the [Java Runtime Environment](http://www.oracle.com/technetwork/java/javase/downloads/jre9-downloads-3848532.html)
+  * On Windows, if you use the `exe` version, you do not need the `Java Runtime Environment`
 * Use Chrome, Firefox, Edge, or Safari... don't use Internet Explorer
 
 ## Usage
 * Windows
-  * Double click `MFD.jar`
+  * Double click `MFD.jar` or `MFD.exe`
   * Make sure you allow it through your firewall if a warning comes up
   * You might need to run it as administrator
 * macOS

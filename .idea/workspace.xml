@@ -6,14 +6,8 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cb83e9a3-806a-4bee-82c4-7231602f2d5e" name="Default" comment="Clarified the &quot;port in use&quot; error message">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/org_jetbrains_kotlin_kotlin_stdlib_1_2_71.xml" beforeDir="false" />
+    <list default="true" id="cb83e9a3-806a-4bee-82c4-7231602f2d5e" name="Default" comment="1.6.0">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MFD-kt.iml" beforeDir="false" afterPath="$PROJECT_DIR$/MFD-kt.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/displays/mfd.js" beforeDir="false" afterPath="$PROJECT_DIR$/displays/mfd.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/api.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/api.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/readme.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MFD.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/MFD.kt" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/.idea/" />
@@ -40,7 +34,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="gitignore" value="4" />
+          <entry key="gitignore" value="5" />
           <entry key="html" value="1" />
           <entry key="js" value="1" />
           <entry key="kt" value="3" />
@@ -54,7 +48,7 @@
           <entry key="JavaScript" value="1" />
           <entry key="Kotlin" value="3" />
           <entry key="Markdown" value="5" />
-          <entry key="PLAIN_TEXT" value="4" />
+          <entry key="PLAIN_TEXT" value="5" />
           <entry key="XML" value="1" />
         </counts>
       </usages-collector>
@@ -63,65 +57,22 @@
           <entry key="gitignore" value="83" />
           <entry key="js" value="400" />
           <entry key="kt" value="2957" />
-          <entry key="md" value="1281" />
-          <entry key="txt" value="67" />
+          <entry key="md" value="1368" />
+          <entry key="txt" value="73" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="JavaScript" value="400" />
           <entry key="Kotlin" value="2957" />
-          <entry key="Markdown" value="1281" />
-          <entry key="PLAIN_TEXT" value="150" />
+          <entry key="Markdown" value="1368" />
+          <entry key="PLAIN_TEXT" value="156" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/MFD.kt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="217">
-              <caret line="544" column="26" lean-forward="true" selection-start-line="544" selection-start-column="26" selection-end-line="544" selection-end-column="26" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/displays/mfd.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="511">
-              <caret line="298" column="6" selection-start-line="298" selection-start-column="6" selection-end-line="298" selection-end-column="6" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/docs/readme.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="535">
-                <caret line="126" column="47" selection-start-line="126" selection-start-column="47" selection-end-line="126" selection-end-column="47" />
-              </first_editor>
-              <second_editor />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/docs/api.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="440">
-                <caret line="28" column="23" selection-start-line="28" selection-start-column="23" selection-end-line="28" selection-end-column="23" />
-              </first_editor>
-              <second_editor />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -242,7 +193,7 @@
     <property name="Downloaded.Files.Path.Enabled" value="true" />
     <property name="Repository.Attach.JavaDocs" value="false" />
     <property name="Repository.Attach.Sources" value="false" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1545009412247" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1545009694946" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
@@ -431,7 +382,14 @@
       <option name="project" value="LOCAL" />
       <updated>1539243353100</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="1.6.0">
+      <created>1545009469152</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1545009469152</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TodoView">
@@ -445,9 +403,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="262" y="94" width="2265" height="1273" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.14648525" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14648525" />
       <window_info id="Structure" order="1" weight="0.24985963" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -467,9 +424,9 @@
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.329653" />
       <window_info anchor="bottom" id="Log Manager" order="10" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" weight="0.32976282" />
-      <window_info anchor="bottom" id="Messages" order="12" visible="true" weight="0.144" />
+      <window_info anchor="bottom" id="Messages" order="12" weight="0.3608889" />
       <window_info anchor="bottom" id="Debug Logs" order="13" />
-      <window_info anchor="bottom" id="Version Control" order="14" weight="0.329653" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="14" visible="true" weight="0.3288889" />
       <window_info anchor="bottom" id="Salesforce" order="15" />
       <window_info anchor="bottom" id="Execute Anonymous" order="16" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -495,7 +452,8 @@
     <MESSAGE value="1.5.0" />
     <MESSAGE value="Cleaned up imports" />
     <MESSAGE value="Clarified the &quot;port in use&quot; error message" />
-    <option name="LAST_COMMIT_MESSAGE" value="Clarified the &quot;port in use&quot; error message" />
+    <MESSAGE value="1.6.0" />
+    <option name="LAST_COMMIT_MESSAGE" value="1.6.0" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -625,24 +583,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/displays/mfd.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="511">
-          <caret line="298" column="6" selection-start-line="298" selection-start-column="6" selection-end-line="298" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/MFD.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="217">
-          <caret line="544" column="26" lean-forward="true" selection-start-line="544" selection-start-column="26" selection-end-line="544" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/docs/api.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="440">
+          <first_editor relative-caret-position="560">
             <caret line="28" column="23" selection-start-line="28" selection-start-column="23" selection-end-line="28" selection-end-column="23" />
           </first_editor>
           <second_editor />
@@ -652,10 +596,24 @@
     <entry file="file://$PROJECT_DIR$/docs/readme.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="535">
-            <caret line="126" column="47" selection-start-line="126" selection-start-column="47" selection-end-line="126" selection-end-column="47" />
+          <first_editor relative-caret-position="715">
+            <caret line="126" column="89" selection-start-line="126" selection-start-column="89" selection-end-line="126" selection-end-column="89" />
           </first_editor>
           <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/displays/mfd.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="511">
+          <caret line="298" column="6" selection-start-line="298" selection-start-column="6" selection-end-line="298" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/MFD.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="10380">
+          <caret line="544" column="26" lean-forward="true" selection-start-line="544" selection-start-column="26" selection-end-line="544" selection-end-column="26" />
         </state>
       </provider>
     </entry>

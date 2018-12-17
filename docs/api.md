@@ -26,6 +26,10 @@ Scrolls the mouse wheel up or down.
 Runs a commandline command. Can be used to open programs. If you download someone else's display(s), examine usage of `mfd.exec` very carefully.
 ### `mfd.url(_url_)`
 Opens a URL in the default web browser of the host computer. You must include `http(s)://` as part of the URL. This feature does not work in Linux.
+### `mfd.playMP3(_path_)`
+Stops any current MP3 playing in MFD and plays the MP3 in the path. Path is either relative to the `.jar` or an absolute path.
+### `mfd.stopMP3()`
+Stops any current MP3 playing in MFD.
 ### `mfd.getMouse(_callback_)` or `mfd.gM(...)`
 Gets the pixel coordinates of the cursor/mouse in the format: `{"x": 0, "y": 0}`.
 ### `mfd.getPixel(_x_, _y_, _callback_)` or `mfd.gP(...)`

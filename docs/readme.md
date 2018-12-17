@@ -44,6 +44,7 @@ It can also be used for desktop macros, or pretty much anything really.
 * Windows
   * Double click `MFD.jar`
   * Make sure you allow it through your firewall if a warning comes up
+  * You might need to run it as administrator
 * macOS
   * `System Preferences` -> `Security & Privacy`-> click `Open Anyway`
   * Run via terminal, `sudo java -jar MFD.jar`
@@ -120,6 +121,10 @@ It can also be used for desktop macros, or pretty much anything really.
 
 # Changelog
 
+* 1.6.0 - 16Dec18
+  * Added an API to play and stop an mp3 on the host computer, `mfd.playMP3(_path_)` and `mfd.stopMP3()`
+  * Updated some dependencies
+  * Removed all displays besides `example` and `keypad` to put them in their own projects
 * 1.5.0 - 10Oct18
   * Added an api for getting the focused window's title (`mfd.getWindowTitle(title => {console.log(title);})`)
   * Transitioned from `spark-kotlin 1.0.0-alpha` to `spark-core 2.8.0` for security reasons

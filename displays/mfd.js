@@ -291,14 +291,26 @@ let mfd = (function () {
 		return this;
 	}
 
+	m.playMP3 = function (path) {
+		path = path.replace(new RegExp('\\\\', 'g'), '/'); // this is just to replace a single "\" with a "/"
+		if (typeof path !== 'string') console.error('Bad input, use mfd.playMP3(path)');
+		else queue({action: 'playmp3', data: path});
+		return this;
+	};
+
+    m.stopMP3 = function () {
+        queue({action: 'stopmp3'});
+        return this;
+    };
+
 	m.getPixel = function (x, y, fn) {
 	    if (typeof x !== 'number' || typeof y !== 'number') console.error('Bad input, use mfd.getPixel(x, y[, fn])');
 	    else queue({
-	        action: 'pixel',
-	        data: `${x},${y}`,
-	        callback: json => {
-                if (typeof fn === 'function') fn(json);
-            }
+	    	action: 'pixel',
+	    	data: `${x},${y}`,
+	    	callback: json => {
+            	if (typeof fn === 'function') fn(json);
+        	}
         });
 	};
 	m.gP = m.getPixel;

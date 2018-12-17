@@ -6,8 +6,11 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cb83e9a3-806a-4bee-82c4-7231602f2d5e" name="Default" comment="1.6.0">
+    <list default="true" id="cb83e9a3-806a-4bee-82c4-7231602f2d5e" name="Default" comment="updated readme">
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/MFD_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/MFD_jar.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MFD.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/MFD.kt" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/.idea/" />
@@ -37,8 +40,8 @@
           <entry key="gitignore" value="5" />
           <entry key="html" value="1" />
           <entry key="js" value="1" />
-          <entry key="kt" value="3" />
-          <entry key="md" value="5" />
+          <entry key="kt" value="4" />
+          <entry key="md" value="6" />
           <entry key="xml" value="1" />
         </counts>
       </usages-collector>
@@ -46,8 +49,8 @@
         <counts>
           <entry key="HTML" value="1" />
           <entry key="JavaScript" value="1" />
-          <entry key="Kotlin" value="3" />
-          <entry key="Markdown" value="5" />
+          <entry key="Kotlin" value="4" />
+          <entry key="Markdown" value="6" />
           <entry key="PLAIN_TEXT" value="5" />
           <entry key="XML" value="1" />
         </counts>
@@ -56,23 +59,36 @@
         <counts>
           <entry key="gitignore" value="83" />
           <entry key="js" value="400" />
-          <entry key="kt" value="2957" />
-          <entry key="md" value="1368" />
-          <entry key="txt" value="73" />
+          <entry key="kt" value="3085" />
+          <entry key="md" value="1672" />
+          <entry key="txt" value="87" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="JavaScript" value="400" />
-          <entry key="Kotlin" value="2957" />
-          <entry key="Markdown" value="1368" />
-          <entry key="PLAIN_TEXT" value="156" />
+          <entry key="Kotlin" value="3085" />
+          <entry key="Markdown" value="1672" />
+          <entry key="PLAIN_TEXT" value="170" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/MFD.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="480">
+              <caret line="70" column="66" selection-start-line="70" selection-start-column="66" selection-end-line="70" selection-end-column="66" />
+              <folding>
+                <element signature="e#138#826#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -126,15 +142,15 @@
         <option value="$PROJECT_DIR$/src/getDisplay.kt" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/displays/mfd.js" />
-        <option value="$PROJECT_DIR$/src/MFD.kt" />
         <option value="$PROJECT_DIR$/docs/api.md" />
         <option value="$PROJECT_DIR$/docs/readme.md" />
+        <option value="$PROJECT_DIR$/src/MFD.kt" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="262" />
-    <option name="y" value="94" />
+    <option name="x" value="230" />
+    <option name="y" value="113" />
     <option name="width" value="2265" />
     <option name="height" value="1273" />
   </component>
@@ -150,11 +166,6 @@
             <path>
               <item name="mfd" type="b2602c69:ProjectViewProjectNode" />
               <item name="mfd" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="mfd" type="b2602c69:ProjectViewProjectNode" />
-              <item name="mfd" type="462c0819:PsiDirectoryNode" />
-              <item name="displays" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="mfd" type="b2602c69:ProjectViewProjectNode" />
@@ -193,7 +204,7 @@
     <property name="Downloaded.Files.Path.Enabled" value="true" />
     <property name="Repository.Attach.JavaDocs" value="false" />
     <property name="Repository.Attach.Sources" value="false" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1545009694946" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1545020899827" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
@@ -389,10 +400,17 @@
       <option name="project" value="LOCAL" />
       <updated>1545009469152</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="updated readme">
+      <created>1545009704415</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1545009704415</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
-  <component name="TodoView">
+  <component name="TodoView" selected-index="2">
     <todo-panel id="selected-file">
       <is-autoscroll-to-source value="true" />
     </todo-panel>
@@ -402,9 +420,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="262" y="94" width="2265" height="1273" extended-state="0" />
+    <frame x="230" y="113" width="2265" height="1273" extended-state="1" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14648525" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.14648525" />
       <window_info id="Structure" order="1" weight="0.24985963" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -415,18 +434,18 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32981783" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.17333333" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39980826" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.20266667" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.329653" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.3288889" />
       <window_info anchor="bottom" id="DB Execution Console" order="7" />
       <window_info anchor="bottom" id="SFDX" order="8" />
-      <window_info anchor="bottom" id="Terminal" order="9" weight="0.329653" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.3288889" />
       <window_info anchor="bottom" id="Log Manager" order="10" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" weight="0.32976282" />
       <window_info anchor="bottom" id="Messages" order="12" weight="0.3608889" />
       <window_info anchor="bottom" id="Debug Logs" order="13" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="14" visible="true" weight="0.3288889" />
+      <window_info anchor="bottom" id="Version Control" order="14" weight="0.3288889" />
       <window_info anchor="bottom" id="Salesforce" order="15" />
       <window_info anchor="bottom" id="Execute Anonymous" order="16" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -444,6 +463,32 @@
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.gitignore" />
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.js" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
@@ -453,7 +498,8 @@
     <MESSAGE value="Cleaned up imports" />
     <MESSAGE value="Clarified the &quot;port in use&quot; error message" />
     <MESSAGE value="1.6.0" />
-    <option name="LAST_COMMIT_MESSAGE" value="1.6.0" />
+    <MESSAGE value="updated readme" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated readme" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -593,16 +639,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/docs/readme.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="715">
-            <caret line="126" column="89" selection-start-line="126" selection-start-column="89" selection-end-line="126" selection-end-column="89" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/displays/mfd.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="511">
@@ -610,10 +646,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/docs/readme.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="1233">
+            <caret line="131" column="63" lean-forward="true" selection-start-line="131" selection-start-column="63" selection-end-line="131" selection-end-column="63" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/MFD.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="10380">
-          <caret line="544" column="26" lean-forward="true" selection-start-line="544" selection-start-column="26" selection-end-line="544" selection-end-column="26" />
+        <state relative-caret-position="480">
+          <caret line="70" column="66" selection-start-line="70" selection-start-column="66" selection-end-line="70" selection-end-column="66" />
+          <folding>
+            <element signature="e#138#826#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

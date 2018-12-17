@@ -9,6 +9,7 @@
 import com.sun.jna.Platform
 import com.sun.jna.platform.win32.Advapi32Util
 import com.sun.jna.platform.win32.WinReg
+import javafx.application.Application
 import javafx.embed.swing.JFXPanel
 import javafx.scene.media.Media
 import javafx.scene.media.MediaException
@@ -26,6 +27,8 @@ import org.json.JSONObject
 import java.awt.event.KeyEvent
 import java.io.FileFilter
 import spark.Spark.*
+import javafx.stage.Stage
+
 
 fun main(args: Array<String>) {
 
@@ -80,7 +83,7 @@ class MFD(
     private val crypto: MFDCrypto = MFDCrypto()
     private val os = getOS()
 
-    lateinit var mediaPlayer: MediaPlayer // so the MediaPlayer doesn't get GC'd and stop after 5 seconds of playing
+    private lateinit var mediaPlayer: MediaPlayer // so the MediaPlayer doesn't get GC'd and stop after 5 seconds of playing
 
     private var users = mutableMapOf<String, Long>()
 
@@ -408,22 +411,20 @@ class MFD(
                         res.status(204)
                     }
                     "mouseon" -> {
-                        val button: Int
-                        when (data) {
-                            "center" -> button = InputEvent.BUTTON2_DOWN_MASK
-                            "right" -> button = InputEvent.BUTTON3_DOWN_MASK
-                            else -> button = InputEvent.BUTTON1_DOWN_MASK
+                        val button: Int = when (data) {
+                            "center" -> InputEvent.BUTTON2_DOWN_MASK
+                            "right" -> InputEvent.BUTTON3_DOWN_MASK
+                            else -> InputEvent.BUTTON1_DOWN_MASK
                         }
                         robot.mousePress(button)
                         println("${req.ip()}> mouseon:$data")
                         res.status(204)
                     }
                     "mouseoff" -> {
-                        val button: Int
-                        when (data) {
-                            "center" -> button = InputEvent.BUTTON2_DOWN_MASK
-                            "right" -> button = InputEvent.BUTTON3_DOWN_MASK
-                            else -> button = InputEvent.BUTTON1_DOWN_MASK
+                        val button: Int = when (data) {
+                            "center" -> InputEvent.BUTTON2_DOWN_MASK
+                            "right" -> InputEvent.BUTTON3_DOWN_MASK
+                            else -> InputEvent.BUTTON1_DOWN_MASK
                         }
 
                         robot.mouseRelease(button)
@@ -558,13 +559,13 @@ class MFD(
                         if (vj == null) return@post vjError()
 
                         val json = JSONObject()
-                        json.put("enabled", vj!!.vJoyEnabled())
-                        json.put("manufacturer", vj!!.getvJoyManufacturerString())
-                        json.put("product", vj!!.getvJoyProductString())
-                        json.put("serialnumber", vj!!.getvJoySerialNumberString())
-                        json.put("version", vj!!.getvJoyVersion())
-                        json.put("maxDevices", vj!!.getvJoyMaxDevices())
-                        json.put("existingDevices", vj!!.getNumberExistingVJD())
+                        json.put("enabled", vj.vJoyEnabled())
+                        json.put("manufacturer", vj.getvJoyManufacturerString())
+                        json.put("product", vj.getvJoyProductString())
+                        json.put("serialnumber", vj.getvJoySerialNumberString())
+                        json.put("version", vj.getvJoyVersion())
+                        json.put("maxDevices", vj.getvJoyMaxDevices())
+                        json.put("existingDevices", vj.getNumberExistingVJD())
 
                         println("${req.ip()}> vj_manufacturer")
                         res.status(200)
@@ -581,7 +582,7 @@ class MFD(
                         if (vj == null) return@post vjError()
 
                         val rID = data.toInt()
-                        if (!vj!!.isVJDExists(rID)) {
+                        if (!vj.isVJDExists(rID)) {
                             println("${req.ip()}> requested non-existent VJD: $rID")
                             res.status(404)
                             res.type("text/html")
@@ -589,14 +590,14 @@ class MFD(
                         }
 
                         val json = JSONObject()
-                        json.put("status", vj!!.getVJDStatus(rID))
-                        json.put("btnNumber", vj!!.getVJDButtonNumber(rID))
-                        json.put("discPovNumber", vj!!.getVJDDiscPovNumber(rID))
-                        json.put("contPovNumber", vj!!.getVJDContPovNumber(rID))
-                        json.put("ownerPid", vj!!.getOwnerPid(rID))
+                        json.put("status", vj.getVJDStatus(rID))
+                        json.put("btnNumber", vj.getVJDButtonNumber(rID))
+                        json.put("discPovNumber", vj.getVJDDiscPovNumber(rID))
+                        json.put("contPovNumber", vj.getVJDContPovNumber(rID))
+                        json.put("ownerPid", vj.getOwnerPid(rID))
                         arrayOf("x", "y", "z", "rx", "ry", "rz", "sl0", "sl1", "whl", "pov").forEach{
-                            if (vj!!.getVJDAxisExist(rID, it)) {
-                                val max = vj!!.getVJDAxisMax(rID, it)
+                            if (vj.getVJDAxisExist(rID, it)) {
+                                val max = vj.getVJDAxisMax(rID, it)
                                 json.put("${it}_max", max)
                             }
                         }
@@ -610,16 +611,16 @@ class MFD(
                         if (vj == null) return@post vjError()
 
                         val rID = data.toInt()
-                        if (!vj!!.isVJDExists(rID)) {
+                        if (!vj.isVJDExists(rID)) {
                             println("${req.ip()}> requested non-existent vjd: $rID")
                             res.status(404)
                             res.type("text/html")
                             return@post "<strong>Error 404</strong> Requested VJD does not exist"
                         }
 
-                        val status = vj!!.getVJDStatus(rID)
+                        val status = vj.getVJDStatus(rID)
                         if (status == "VJD_STAT_OWN" || status == "VJD_STAT_FREE") {
-                            if (vj!!.acquireVJD(rID)) {
+                            if (vj.acquireVJD(rID)) {
                                 println("${req.ip()}> vj_vjd_acquire: $rID")
                                 res.status(204)
                             } else {
@@ -639,7 +640,7 @@ class MFD(
                         if (vj == null) return@post vjError()
 
                         val rID = data.toInt()
-                        vj!!.relinquishVJD(rID)
+                        vj.relinquishVJD(rID)
 
                         println("${req.ip()}> vj_vjd_relinquish: $rID")
                         res.status(204)
@@ -652,9 +653,9 @@ class MFD(
                         val axis = params[1]
                         val value = params[2].toLong()
 
-                        val status = vj!!.getVJDStatus(rID)
+                        val status = vj.getVJDStatus(rID)
                         if (status == "VJD_STAT_OWN") {
-                            if (vj!!.setAxis(value, rID, axis)) {
+                            if (vj.setAxis(value, rID, axis)) {
                                 println("${req.ip()}> vj_vjd_setaxis: $rID, $axis, $value")
                                 res.status(204)
                             } else {
@@ -678,9 +679,9 @@ class MFD(
                         val btn = params[1].toShort()
                         val value = params[2].toBoolean()
 
-                        val status = vj!!.getVJDStatus(rID)
+                        val status = vj.getVJDStatus(rID)
                         if (status == "VJD_STAT_OWN") {
-                            if (vj!!.setBtn(value, rID, btn)) {
+                            if (vj.setBtn(value, rID, btn)) {
                                 println("${req.ip()}> vj_vjd_setbtn: $rID, $btn, $value")
                                 res.status(204)
                             } else {
@@ -704,9 +705,9 @@ class MFD(
                         val nPov = params[1].toShort()
                         val value = params[2].toInt()
 
-                        val status = vj!!.getVJDStatus(rID)
+                        val status = vj.getVJDStatus(rID)
                         if (status == "VJD_STAT_OWN") {
-                            if (vj!!.setDiscPov(value, rID, nPov)) {
+                            if (vj.setDiscPov(value, rID, nPov)) {
                                 println("${req.ip()}> vj_vjd_setdiscpov: $rID, $nPov, $value")
                                 res.status(204)
                             } else {
@@ -730,9 +731,9 @@ class MFD(
                         val nPov = params[1].toShort()
                         val value = params[2].toInt()
 
-                        val status = vj!!.getVJDStatus(rID)
+                        val status = vj.getVJDStatus(rID)
                         if (status == "VJD_STAT_OWN") {
-                            if (vj!!.setContPov(value, rID, nPov)) {
+                            if (vj.setContPov(value, rID, nPov)) {
                                 println("${req.ip()}> vj_vjd_setcontpov: $rID, $nPov, $value")
                                 res.status(204)
                             } else {
@@ -752,7 +753,7 @@ class MFD(
                         if (vj == null) return@post vjError()
 
                         val rID = data.toInt()
-                        if (vj!!.resetVJD(rID)) {
+                        if (vj.resetVJD(rID)) {
                             println("${req.ip()}> vj_vjd_relinquish: $rID")
                             res.status(204)
                         } else {
@@ -766,7 +767,7 @@ class MFD(
                         if (vj == null) return@post vjError()
 
                         val rID = data.toInt()
-                        if (vj!!.resetButtons(rID)) {
+                        if (vj.resetButtons(rID)) {
                             println("${req.ip()}> vj_vjd_resetbtns: $rID")
                             res.status(204)
                         } else {
@@ -780,7 +781,7 @@ class MFD(
                         if (vj == null) return@post vjError()
 
                         val rID = data.toInt()
-                        if (vj!!.resetPovs(rID)) {
+                        if (vj.resetPovs(rID)) {
                             println("${req.ip()}> vj_vjd_resetpovs: $rID")
                             res.status(204)
                         } else {
@@ -793,7 +794,7 @@ class MFD(
                     "vj_resetall" -> {
                         if (vj == null) return@post vjError()
 
-                        vj!!.resetAll()
+                        vj.resetAll()
                         println("${req.ip()}> vj_resetall")
                         res.status(204)
                     }
@@ -853,8 +854,8 @@ class MFD(
         popup.addSeparator()
         popup.add(exitItem)
 
-        trayIcon.setPopupMenu(popup)
-        trayIcon.setImageAutoSize(true)
+        trayIcon.popupMenu = popup
+        trayIcon.isImageAutoSize = true
         try {
             tray.add(trayIcon)
         } catch (e: AWTException) {
@@ -915,7 +916,7 @@ class MFD(
         trayIcon.displayMessage("Multi-Function Display", "MFD $version is running", TrayIcon.MessageType.NONE)
     }
 
-    fun getIPv4(): String {
+    private fun getIPv4(): String {
         val ip: ByteArray = Inet4Address.getLocalHost().address
         val oct1: Int = if (ip[0].toInt() < 0) ip[0].toInt() + 256 else ip[0].toInt()
         val oct2: Int = if (ip[1].toInt() < 0) ip[1].toInt() + 256 else ip[1].toInt()

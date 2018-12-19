@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="com.googlecode.soundlibs:jlayer:1.0.1-1" type="repository">
+    <properties maven-id="com.googlecode.soundlibs:jlayer:1.0.1-1" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/jlayer-1.0.1-1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/junit-3.8.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

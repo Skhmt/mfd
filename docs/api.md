@@ -40,6 +40,8 @@ Gets a screenshot in the format of a URL blob. Example: `mfd.getScreenshot(0,0,1
 Waits a certain amount of milliseconds (1/1000th of a second) before doing something else. Useful when chaining actions, like: `mfd.mouseClicK('right').wait(100).mouseClick('left');`
 ### `mfd.getWindowTitle(_callback_)`
 Gets the title of the focused window as a string. Example: `mfd.getWindowTitle(title => alert(title)`
+### `mfd.ping(_callback)`
+Gets the ping (network latency) in milliseconds. Example: `mfd.ping(p => alert("ping is "+p+"ms"))`
 
 ## vJoy Actions
 These are functions that only work on Windows with vJoy installed

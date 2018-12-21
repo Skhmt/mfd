@@ -195,7 +195,7 @@ These keys do not work on their own for `keyDown`/`keyUp`, you must use the corr
 * `}`
 * `|`
 * `:`
-* `\"`: you need to put a backslash first because of javascript escape characters
+* `"`: you need to put a backslash first because of javascript escape characters
 * `<`
 * `>`
 * `?`

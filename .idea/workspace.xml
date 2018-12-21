@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8760fc78-fff3-48a2-bcbb-e8a91ea64f3a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/api.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/api.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/MediaKeys.kt" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -24,7 +23,7 @@
         <counts>
           <entry key="html" value="1" />
           <entry key="js" value="1" />
-          <entry key="kt" value="1" />
+          <entry key="kt" value="2" />
           <entry key="md" value="1" />
         </counts>
       </usages-collector>
@@ -32,18 +31,20 @@
         <counts>
           <entry key="HTML" value="1" />
           <entry key="JavaScript" value="1" />
-          <entry key="Kotlin" value="1" />
+          <entry key="Kotlin" value="2" />
           <entry key="Specification" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="md" value="145" />
+          <entry key="md" value="148" />
+          <entry key="txt" value="74" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Specification" value="145" />
+          <entry key="PLAIN_TEXT" value="74" />
+          <entry key="Specification" value="148" />
         </counts>
       </usages-collector>
     </session>
@@ -51,40 +52,27 @@
   <component name="FileEditorManager">
     <leaf>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/docs/api.md">
+        <entry file="file://$PROJECT_DIR$/src/MediaKeys.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="43" column="99" lean-forward="true" selection-start-line="43" selection-start-column="99" selection-end-line="43" selection-end-column="99" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/MFD.kt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-9092">
-              <caret line="1" column="22" selection-start-line="1" selection-start-column="22" selection-end-line="1" selection-end-column="22" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/displays/mfd.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2585" />
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/displays/example/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="311">
-              <caret line="92" column="58" lean-forward="true" selection-start-line="92" selection-start-column="58" selection-end-line="92" selection-end-column="58" />
+            <state relative-caret-position="100">
+              <caret line="10" column="3" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="32" />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Kotlin File" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>ping</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -93,6 +81,7 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/docs/api.md" />
+        <option value="$PROJECT_DIR$/src/MediaKeys.kt" />
       </list>
     </option>
   </component>
@@ -144,7 +133,11 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="Downloaded.Files.Path.Enabled" value="true" />
+    <property name="Repository.Attach.JavaDocs" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1545425797564" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/jnativehook-2.1.0.jar!/" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.34798878" />
@@ -172,11 +165,25 @@
       <option name="presentableId" value="Default" />
       <updated>1545417025281</updated>
     </task>
+    <task id="LOCAL-00001" summary="Added mfd.ping() to the api docs">
+      <created>1545425569792</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1545425569792</updated>
+    </task>
+    <task id="LOCAL-00002" summary="made the &quot; more clear">
+      <created>1545425660455</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1545425660455</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="194" y="98" width="1697" height="1022" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info id="Image Layers" />
       <window_info id="Designer" />
@@ -208,12 +215,29 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added mfd.ping() to the api docs" />
+    <MESSAGE value="made the &quot; more clear" />
+    <option name="LAST_COMMIT_MESSAGE" value="made the &quot; more clear" />
+  </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/docs/api.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1027">
+          <caret line="202" lean-forward="true" selection-start-line="202" selection-end-line="202" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/MFD.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-9092">
           <caret line="1" column="22" selection-start-line="1" selection-start-column="22" selection-end-line="1" selection-end-column="22" />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/displays/mfd.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2585" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/displays/example/index.html">
@@ -223,15 +247,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/displays/mfd.js">
+    <entry file="file://$PROJECT_DIR$/src/MediaKeys.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2585" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/api.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="43" column="99" lean-forward="true" selection-start-line="43" selection-start-column="99" selection-end-line="43" selection-end-column="99" />
+        <state relative-caret-position="100">
+          <caret line="10" column="3" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="32" />
         </state>
       </provider>
     </entry>

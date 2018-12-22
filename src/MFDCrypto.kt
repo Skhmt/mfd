@@ -127,8 +127,8 @@ class MFDCrypto() {
         val hexUC = hex.toUpperCase()
         val HEX_CHARS = "0123456789ABCDEF"
         val bytes = hex.length/2
-        var output = ByteArray(bytes)
-        for (i in 0..bytes-1) {
+        val output = ByteArray(bytes)
+        for (i in 0 until bytes) {
             val index = i*2
             val firstDec = HEX_CHARS.indexOf(hexUC[index]);
             val secondDec = HEX_CHARS.indexOf(hexUC[index + 1]);
@@ -141,7 +141,7 @@ class MFDCrypto() {
     fun hexToString(hex: String): String {
         var output = ""
         val bytes = hex.length/2
-        for (i in 0..bytes-1) {
+        for (i in 0 until bytes) {
             val index = i*2
             val newChar = hex.substring(index, index+2)
             output += Integer.parseInt(newChar, 16).toChar()

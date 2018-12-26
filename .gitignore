@@ -1,5 +1,6 @@
 /out
 /lib
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/usage.statistics.xml
+/.idea/*
+!/.idea/artifacts
+!/.idea/libraries
+!/.idea/modules.xml

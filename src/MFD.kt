@@ -3,7 +3,6 @@
  * https://github.com/Skhmt/mfd
  *
  * This creates a SystemTray and a webserver.
- * Port 80 will be the management page.
  *
  * @author skhmt
  */

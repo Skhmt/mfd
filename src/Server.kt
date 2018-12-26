@@ -24,9 +24,7 @@ import javax.imageio.ImageIO
 fun server(state: MFDState) {
 
     val robot = Robot()
-
-    lateinit var mediaPlayer: Player // so the Player doesn't get GC'd and stop after 5 seconds of playing
-
+    lateinit var mediaPlayer: Player // so the mp3 Player doesn't get GC'd and stop after 5 seconds of playing
     val users = mutableMapOf<String, Long>()
 
     if (state.verbose) println("> OS detected as ${state.os}")
@@ -136,7 +134,7 @@ fun server(state: MFDState) {
     //                                                               //
     ///////////////////////////////////////////////////////////////////
 
-    //fetch("/mfd/app", {method: "POST", body: "..."})
+    //fetch("/mfd/api", {method: "POST", body: "..."})
     Spark.post("/mfd/api") { req, res ->
         if (req.body().isEmpty()) {
             println("${req.ip()}> Request body empty")
@@ -469,12 +467,6 @@ fun server(state: MFDState) {
                     res.type("application/json")
                     json.toString()
                 }
-//                    "vj_" -> {
-//                        if (vj == null) return@post vjError(request, response)
-//
-//                        println("${req.ip()}> vj_")
-//                        status(204)
-//                    }
                 "vj_vjd_info" -> {
                     if (vj == null) return@post vjError()
 

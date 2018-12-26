@@ -130,8 +130,8 @@ class MFDCrypto() {
         val output = ByteArray(bytes)
         for (i in 0 until bytes) {
             val index = i*2
-            val firstDec = HEX_CHARS.indexOf(hexUC[index]);
-            val secondDec = HEX_CHARS.indexOf(hexUC[index + 1]);
+            val firstDec = HEX_CHARS.indexOf(hexUC[index])
+            val secondDec = HEX_CHARS.indexOf(hexUC[index + 1])
             val octet = firstDec.shl(4).or(secondDec)
             output[i] = octet.toByte()
         }

@@ -4,7 +4,6 @@
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/jSensors-2.1.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jna-4.5.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/slf4j-simple-1.7.25.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.7.25.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jPowerShell-2.0.jar!/" />
     </CLASSES>

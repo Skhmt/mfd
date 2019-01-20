@@ -16,5 +16,6 @@
     <orderEntry type="library" name="com.1stleg:jnativehook:2.1.0" level="project" />
     <orderEntry type="library" name="com.profesorfalken:jSensors:2.1.1" level="project" />
     <orderEntry type="library" name="com.googlecode.soundlibs:mp3spi:1.9.5.4" level="project" />
+    <orderEntry type="library" name="org.slf4j:slf4j-nop:1.7.25" level="project" />
   </component>
 </module>

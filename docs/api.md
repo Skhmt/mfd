@@ -30,6 +30,8 @@ Opens a URL in the default web browser of the host computer. You must include `h
 Stops any current MP3 playing in MFD and plays the MP3 in the path. Path is either relative to the `.jar` or an absolute path.
 ### `mfd.stopMP3()`
 Stops any current MP3 playing in MFD.
+### `mfd.volMP3(_volume_)`
+Changes the volume of all MP3s played through MFD. The `volume` is an integer from 0 to 100 as a percentage of volume. The default is 100 if it's not set.
 ### `mfd.media(_mediaKey_)`
 Hits a media key, see the reference below.
 ### `mfd.getMouse(_callback_)` or `mfd.gM(...)`
@@ -45,7 +47,7 @@ Gets the title of the focused window as a string. Example: `mfd.getWindowTitle(t
 ### `mfd.ping(_callback_)`
 Gets the ping (network latency) in milliseconds. Example: `mfd.ping(p => alert("ping is "+p+"ms"))`
 ### `mfd.sensors(_callback_)`
-Gets the cpu temperature, cpu load, memory load, and gpu temperature. Example: `mfd.sensors(s => console.log(s))`
+Gets the cpu temperature, cpu load, memory load, and gpu temperature. Load is a percentage, temperatures are in celsius. Example: `mfd.sensors(s => console.log(s))`
 
 ## vJoy Actions
 These are functions that only work on Windows with vJoy installed

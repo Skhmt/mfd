@@ -303,6 +303,11 @@ let mfd = (function () {
         return this;
     };
 
+    m.volMP3 = function (volume) {
+        if (typeof volume !== 'number') console.error('Bad input, use mfd.volMP3(volume)');
+        else queue({action: 'volmp3', data: volume});
+    }
+
 	m.getPixel = function (x, y, fn) {
 	    if (typeof x !== 'number' || typeof y !== 'number') console.error('Bad input, use mfd.getPixel(x, y[, fn])');
 	    else queue({

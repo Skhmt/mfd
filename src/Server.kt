@@ -4,7 +4,6 @@ import com.profesorfalken.jsensors.model.components.Cpu
 import com.profesorfalken.jsensors.model.components.Gpu
 import com.sun.jna.platform.win32.Advapi32Util
 import com.sun.jna.platform.win32.WinReg
-import javazoom.jl.player.Player
 import org.jnativehook.GlobalScreen
 import org.jnativehook.keyboard.NativeKeyEvent
 import org.json.JSONArray
@@ -17,10 +16,7 @@ import java.awt.Rectangle
 import java.awt.Robot
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileFilter
-import java.io.IOException
+import java.io.*
 import java.lang.UnsupportedOperationException
 import java.net.BindException
 import java.net.URI
@@ -32,7 +28,7 @@ import javax.imageio.ImageIO
 fun server(state: MFDState) {
 
     val robot = Robot()
-    lateinit var mediaPlayer: Player // so the mp3 Player doesn't get GC'd and stop after 5 seconds of playing
+    val mediaPlayer = MP3Clip() // so the mp3 Player doesn't get GC'd and stop after 5 seconds of playing
     val users = mutableMapOf<String, Long>()
 
     // disable logging for GlobalScreen - used for media keys
@@ -471,27 +467,26 @@ fun server(state: MFDState) {
                     json.toString()
                 }
                 "playmp3" -> {
-                    try {
-                        mediaPlayer.close()
-                    } catch (e: Exception) {
+                    val file = File(data)
+                    if (file.exists()) {
+                        Thread {
+                            mediaPlayer.play(file)
+                        }.start()
+                        println("${req.ip()}> playmp3:$data")
+                        res.status(204)
+                    } else {
+                        println("${req.ip()}> playmp3 not found:$data")
+                        res.status(400)
                     }
-
-                    Thread {
-                        val fileStream = File(data).inputStream()
-                        mediaPlayer = Player(fileStream)
-                        mediaPlayer.play()
-                    }.start()
-
-                    println("${req.ip()}> playmp3:$data")
-                    res.status(204)
-
                 }
                 "stopmp3" -> {
-                    try {
-                        mediaPlayer.close()
-                    } catch (e: Exception) {
-                    }
+                    mediaPlayer.stop()
                     println("${req.ip()}> stopmp3")
+                    res.status(204)
+                }
+                "volmp3" -> {
+                    mediaPlayer.vol = data.toInt()
+                    println("${req.ip()}> volmp3:$data")
                     res.status(204)
                 }
                 "sensors" -> {

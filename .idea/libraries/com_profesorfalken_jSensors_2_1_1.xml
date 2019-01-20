@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="com.profesorfalken:jSensors:2.1.1" type="repository">
+    <properties maven-id="com.profesorfalken:jSensors:2.1.1" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/jSensors-2.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jna-4.5.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/slf4j-simple-1.7.25.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.7.25.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jPowerShell-2.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

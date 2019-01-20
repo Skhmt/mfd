@@ -1,4 +1,4 @@
-﻿
+
 # Multi-Function Display (MFD)
 
 ## What is MFD?
@@ -122,6 +122,9 @@ It can also be used for desktop macros, or pretty much anything really.
 
 # Changelog
 
+* 1.7.0 - 20Jan19
+  * Added API to use media buttons, `mfd.media(_button_)`
+  * Added API to get system sensors (cpu load, cpu temp, ram load, gpu temp) if you're running MFD as administrator, `mfd.sensors(_callback_)`
 * 1.6.1 - 17Dec18
   * *If 1.6.0 is working for you, there's no need to update*
   * Changed from JavaFX to JLayer for playing mp3s

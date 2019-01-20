@@ -317,7 +317,12 @@ let mfd = (function () {
 
     // ex: mfd.getScreenshot(0,0,2560,1440, url => window.open(url))
 	m.getScreenshot = function (x, y, width, height, fn) {
-	    if (typeof x !== 'number' || typeof y !== 'number' || typeof width !== 'number' || typeof height !== 'number') {
+	    if (
+	        typeof x !== 'number' ||
+	        typeof y !== 'number' ||
+	        typeof width !== 'number' ||
+	        typeof height !== 'number'
+        ) {
 	        console.error('Bad input, use mfd.getScreenshot(x, y, width, height[, fn])');
 	    }
 	    else queue({
@@ -338,6 +343,33 @@ let mfd = (function () {
 			}
 		});
 	};
+
+	m.media = function (button) {
+	    if (
+	        button !== 'next' &&
+	        button !== 'prev' &&
+	        button !== 'play' &&
+	        button !== 'stop' &&
+	        button !== 'mute' &&
+	        button !== 'up' &&
+	        button !== 'down'
+	    ) {
+	        console.error('Bad input, use mfd.media("next"/"prev"/"play"/"stop"/"mute"/"up"/"down)');
+	    }
+	    queue({
+	        action: 'media',
+	        data: button
+	    });
+	};
+
+	m.sensors = function (fn) {
+	    queue({
+	        action: 'sensors',
+            callback: json => {
+                if (typeof fn === 'function') fn(json);
+            }
+	    });
+	}
 
     // vJoy api, mfd.vj.[...]()
 

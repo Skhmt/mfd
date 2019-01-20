@@ -30,6 +30,8 @@ Opens a URL in the default web browser of the host computer. You must include `h
 Stops any current MP3 playing in MFD and plays the MP3 in the path. Path is either relative to the `.jar` or an absolute path.
 ### `mfd.stopMP3()`
 Stops any current MP3 playing in MFD.
+### `mfd.media(_mediaKey_)`
+Hits a media key, see the reference below.
 ### `mfd.getMouse(_callback_)` or `mfd.gM(...)`
 Gets the pixel coordinates of the cursor/mouse in the format: `{"x": 0, "y": 0}`.
 ### `mfd.getPixel(_x_, _y_, _callback_)` or `mfd.gP(...)`
@@ -40,8 +42,10 @@ Gets a screenshot in the format of a URL blob. Example: `mfd.getScreenshot(0,0,1
 Waits a certain amount of milliseconds (1/1000th of a second) before doing something else. Useful when chaining actions, like: `mfd.mouseClicK('right').wait(100).mouseClick('left');`
 ### `mfd.getWindowTitle(_callback_)`
 Gets the title of the focused window as a string. Example: `mfd.getWindowTitle(title => alert(title)`
-### `mfd.ping(_callback)`
+### `mfd.ping(_callback_)`
 Gets the ping (network latency) in milliseconds. Example: `mfd.ping(p => alert("ping is "+p+"ms"))`
+### `mfd.sensors(_callback_)`
+Gets the cpu temperature, cpu load, memory load, and gpu temperature. Example: `mfd.sensors(s => console.log(s))`
 
 ## vJoy Actions
 These are functions that only work on Windows with vJoy installed
@@ -200,3 +204,13 @@ These keys do not work on their own for `keyDown`/`keyUp`, you must use the corr
 * `>`
 * `?`
 * `~`
+
+### Media keys
+
+* `next`
+* `prev`
+* `play`
+* `stop`
+* `mute`
+* `up` - volume up
+* `down` - volume down

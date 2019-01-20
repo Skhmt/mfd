@@ -1,10 +1,16 @@
 
+import com.profesorfalken.jsensors.JSensors
+import com.profesorfalken.jsensors.model.components.Cpu
+import com.profesorfalken.jsensors.model.components.Gpu
 import com.sun.jna.platform.win32.Advapi32Util
 import com.sun.jna.platform.win32.WinReg
 import javazoom.jl.player.Player
+import org.jnativehook.GlobalScreen
+import org.jnativehook.keyboard.NativeKeyEvent
 import org.json.JSONArray
 import org.json.JSONObject
 import spark.Spark
+import spark.Spark.post
 import java.awt.Desktop
 import java.awt.MouseInfo
 import java.awt.Rectangle
@@ -18,6 +24,8 @@ import java.io.IOException
 import java.lang.UnsupportedOperationException
 import java.net.BindException
 import java.net.URI
+import java.util.logging.Level
+import java.util.logging.Logger
 import javax.crypto.AEADBadTagException
 import javax.imageio.ImageIO
 
@@ -26,6 +34,11 @@ fun server(state: MFDState) {
     val robot = Robot()
     lateinit var mediaPlayer: Player // so the mp3 Player doesn't get GC'd and stop after 5 seconds of playing
     val users = mutableMapOf<String, Long>()
+
+    // disable logging for GlobalScreen - used for media keys
+    val logger = Logger.getLogger(GlobalScreen::class.java.getPackage().name)
+    logger.level = Level.OFF // Level.ALL shows everything, Level.WARNING shows only warnings
+    logger.useParentHandlers = false
 
     if (state.verbose) println("> OS detected as ${state.os}")
 
@@ -135,7 +148,7 @@ fun server(state: MFDState) {
     ///////////////////////////////////////////////////////////////////
 
     //fetch("/mfd/api", {method: "POST", body: "..."})
-    Spark.post("/mfd/api") { req, res ->
+    post("/mfd/api") { req, res ->
         if (req.body().isEmpty()) {
             println("${req.ip()}> Request body empty")
             res.status(400)
@@ -167,7 +180,7 @@ fun server(state: MFDState) {
         val user: String = ivHex.substring(0, 8)
         val time: Long = java.lang.Long.parseLong(ivHex.substring(8), 16)
 
-        if (users.containsKey(user) && time < users[user] as Long) {
+        if (users.containsKey(user) && time <= users[user] as Long) {
             println("${req.ip()}> Replayed or timestamp expired data")
             res.status(401)
             res.type("text/html")
@@ -256,6 +269,37 @@ fun server(state: MFDState) {
                     println("${req.ip()}> typestring:$data")
                     res.status(204)
                 }
+                "media" -> {
+                    when (data) {
+                        "next" -> {
+                            GlobalScreen.postNativeEvent(NativeKeyEvent(2401, 0, 176, 57369, NativeKeyEvent.CHAR_UNDEFINED))
+                        }
+                        "prev" -> {
+                            GlobalScreen.postNativeEvent(NativeKeyEvent(2401, 0, 177, 57360, NativeKeyEvent.CHAR_UNDEFINED))
+                        }
+                        "play" -> {
+                            GlobalScreen.postNativeEvent(NativeKeyEvent(2401, 0, 179, 57378, NativeKeyEvent.CHAR_UNDEFINED))
+                        }
+                        "stop" -> {
+                            GlobalScreen.postNativeEvent(NativeKeyEvent(2401, 0, 178, 57380, NativeKeyEvent.CHAR_UNDEFINED))
+                        }
+                        "mute" -> {
+                            GlobalScreen.postNativeEvent(NativeKeyEvent(2401, 0, 173, 57376, NativeKeyEvent.CHAR_UNDEFINED))
+                        }
+                        "up" -> {
+                            GlobalScreen.postNativeEvent(NativeKeyEvent(2401, 0, 175, 57392, NativeKeyEvent.CHAR_UNDEFINED))
+                        }
+                        "down" -> {
+                            GlobalScreen.postNativeEvent(NativeKeyEvent(2401, 0, 174, 57390, NativeKeyEvent.CHAR_UNDEFINED))
+                        }
+                        else -> {
+                            res.status(400)
+                            return@post "<strong>Error 400</strong> - Unknown command: $data"
+                        }
+                    }
+                    println("${req.ip()}> media:$data")
+                    res.status(204)
+                }
                 "exec" -> {
                     try {
                         if (!state.safeMode) {
@@ -270,7 +314,7 @@ fun server(state: MFDState) {
                         println(e.message)
                         res.status(400)
                         res.type("text/html")
-                        return@post "<strong>Error 400</strong> - Exec: " + e.message
+                        return@post "<strong>Error 400</strong> - Exec: ${e.message}"
                     }
                 }
                 "url" -> {
@@ -288,12 +332,12 @@ fun server(state: MFDState) {
                             println("${req.ip()}> Failed to visit $data. This is a known problem on Linux.")
                             res.status(400)
                             res.type("text/html")
-                            return@post "<strong>Error 400</strong> - URL: " + e.message
+                            return@post "<strong>Error 400</strong> - URL: ${e.message}"
                         } catch (e: IOException) {
                             println("""${req.ip()}> Failed to visit $data. This could be caused by omitting "http:\\" or "https:\\" on macOS.""")
                             res.status(400)
                             res.type("text/html")
-                            return@post "<strong>Error 400</strong> - URL: " + e.message
+                            return@post "<strong>Error 400</strong> - URL: ${e.message}"
                         }
                     } else {
                         println("${req.ip()}> Error: 'Desktop' isn't supported in your version of Java - can't open \"$data\"")
@@ -449,6 +493,64 @@ fun server(state: MFDState) {
                     }
                     println("${req.ip()}> stopmp3")
                     res.status(204)
+                }
+                "sensors" -> {
+                    val json = JSONObject()
+                    val components = JSensors.get.components()
+                    val cpus: List<Cpu>? = components.cpus
+                    val gpus: List<Gpu>? = components.gpus
+
+                    // CPU
+                    val cpuArray = JSONArray()
+                    if (cpus != null) for (cpu in cpus) {
+                        if (cpu.sensors != null) {
+                            val cpuJson = JSONObject()
+                            cpuJson.put("name", cpu.name)
+
+                            // temperatures
+                            val temps = cpu.sensors.temperatures
+                            for (temp in temps) {
+                                if (temp.name == "Temp CPU Package")
+                                    cpuJson.put("temp", temp.value)
+                            }
+
+                            // loads
+                            val loads = cpu.sensors.loads
+                            for (load in loads) {
+                                if (load.name == "Load CPU Total")
+                                    cpuJson.put("load", load.value)
+                                else if (load.name == "Load Memory")
+                                    cpuJson.put("mem", load.value)
+                            }
+
+                            cpuArray.put(cpuJson)
+                        }
+                    }
+                    json.put("cpus", cpuArray)
+
+                    // GPU
+                    val gpuArray = JSONArray()
+                    if (gpus != null) for (gpu in gpus) {
+                        if (gpu.sensors != null) {
+                            val gpuJson = JSONObject()
+                            gpuJson.put("name", gpu.name)
+
+                            // temperatures
+                            val temps = gpu.sensors.temperatures
+                            for (temp in temps) {
+                                if (temp.name == "Temp GPU Core")
+                                    gpuJson.put("temp", temp.value)
+                            }
+
+                            gpuArray.put(gpuJson)
+                        }
+                    }
+                    json.put("gpus", gpuArray)
+
+                    println("${req.ip()}> sensors")
+                    res.status(200)
+                    res.type("application/json")
+                    json.toString()
                 }
                 "vj_info" -> {
                     if (vj == null) return@post vjError()

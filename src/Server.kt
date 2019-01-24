@@ -47,7 +47,7 @@ fun server(state: MFDState) {
     }
     setCrypto(state)
 
-    var runningString = "MFD ${state.version} running locally at http://localhost"
+    var runningString = "${state.name} ${state.version} running locally at http://localhost"
     if (state.port != 80) runningString += ":${state.port}"
 
     println(runningString)

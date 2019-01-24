@@ -55,5 +55,5 @@ fun main(args: Array<String>) {
     tray(state)
     if (verbose) println("> Creating spark server")
     server(state)
-    if (verbose) println("> --- MFD initialized")
+    if (verbose) println("> --- ${state.name} initialized")
 }

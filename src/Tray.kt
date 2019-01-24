@@ -24,7 +24,7 @@ fun tray(state: MFDState) {
     if (state.verbose) println("> Creating popup menu")
     // Creating the values we need
     val popup = PopupMenu()
-    val trayIcon = TrayIcon(icon, "MFD ${state.version}")
+    val trayIcon = TrayIcon(icon, "${state.name} ${state.version}")
     val tray = SystemTray.getSystemTray()
 
     if (state.verbose) println("> Creating menuItems")
@@ -102,5 +102,5 @@ fun tray(state: MFDState) {
     }
 
     if (state.verbose) println("> Displaying version message")
-    trayIcon.displayMessage("Multi-Function Display", "MFD ${state.version} is running", TrayIcon.MessageType.NONE)
+    trayIcon.displayMessage("Multi-Function Display", "${state.name} ${state.version} is running", TrayIcon.MessageType.NONE)
 }

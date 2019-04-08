@@ -10,7 +10,7 @@
 fun main(args: Array<String>) {
 
     val name = "MFD"
-    val version = "1.7.0"
+    val version = "1.7.1"
 
     var port = 80
     var verbose = false

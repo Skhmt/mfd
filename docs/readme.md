@@ -122,6 +122,8 @@ It can also be used for desktop macros, or pretty much anything really.
 
 # Changelog
 
+* 1.7.1 - 7Apr19
+  * Fixed a bug with `mouseWheel`, it should work now
 * 1.7.0 - 20Jan19
   * Fixed a bug that allowed unauthorized users to replay commands in some situations
   * Added API to use media buttons, `mfd.media(_button_)`

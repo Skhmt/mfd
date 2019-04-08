@@ -263,7 +263,7 @@ let mfd = (function () {
 	m.mU = m.mouseOff;
 
 	m.mouseWheel = function (clicks) {
-	    if (typeof click !== 'number') console.error('Bad input, use mfd.mouseWheel(clicks)');
+	    if (typeof clicks !== 'number') console.error('Bad input, use mfd.mouseWheel(clicks)');
 		else queue({action: 'mousewheel', data: clicks});
 		return this;
 	};
